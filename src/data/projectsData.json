@@ -1,0 +1,43 @@
+
+[
+  {
+    "id": 1,
+    "title": "Portfolio Website",
+    "description": "A personal portfolio website showcasing my projects and skills, built using React and Tailwind CSS.", 
+    "image": "../assets/projectCard/chatbot.jpg",
+    "buttonText": "See Project",
+    "buttonLink": "#"
+  },
+  {
+    "id": 2,
+    "title": "HumAi - AI Health Assistant",
+    "description": "An AI-powered health chatbot and symptom checker integrated with a health awareness platform, built using React and Firebase.",
+    "image": "../assets/projectCard/chatbot.jpg",
+    "buttonText": "See Project",
+    "buttonLink": "#"
+  },
+  {
+    "id": 3,
+    "title": "BMI Calculator App",
+    "description": "An Android application developed in Java that calculates Body Mass Index (BMI) based on the user's height and weight.",
+    "image": "../assets/projectCard/chatbot.jpg",
+    "buttonText": "See Project",
+    "buttonLink": "#"
+  },
+  {
+    "id": 4,
+    "title": "Tic Tac Toe Game",
+    "description": "A fun two-player game developed in Android Studio using Java, featuring a clean UI and logical win detection.",
+    "image": "../assets/projectCard/chatbot.jpg",
+    "buttonText": "See Project",
+    "buttonLink": "#"
+  },
+  {
+    "id": 5,
+    "title": "Smart Public Toilet System",
+    "description": "An IoT-powered system designed to monitor and manage public toilet maintenance efficiently, focusing on cleanliness and admin control.",
+    "image": "../assets/projectCard/chatbot.jpg",
+    "buttonText": "See Project",
+    "buttonLink": "#"
+  }
+]

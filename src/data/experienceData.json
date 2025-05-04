@@ -1,0 +1,56 @@
+{
+    "title": "Experience",
+    "sections": [
+      {
+        "type": "Work",
+        "items": [
+          {
+            "company": "----",
+            "role": "---",
+            "duration": "Future",
+            "description": "---"
+          }
+         
+        ]
+      },
+      
+      {
+        "type": "Internship",
+        "items": [
+          {
+            "company": "Growth Ninja Pvt. Ltd.",
+            "role": " App Developer Intern",
+            "duration": "July 2024 to Aug 2024",
+            "description": "Worked on a project related to Android development and learned about app development lifecycle."
+            
+          },
+          {
+            "company": "United Global Info Services Pvt. Ltd.",
+            "role": "Intern",
+            "duration": "July 2023 to Aug 2023",
+            "description": "Learn c++ programming languages, and work on a project related to data structures and algorithms."
+          }
+        ]
+      },
+      {
+        "type": "Volunteership",
+        "items": [
+          {
+            "organization": "GeeksForGeeks",
+            "role": "Campus Ambassador",
+            "duration": "July 2024 to Present",
+            "description": "As a Campus Ambassador, I am responsible for promoting GeeksforGeeks on campus, organizing events, and helping students with their queries."
+            
+          },
+          {
+            "organization": "GSDC-UIT",
+            "role": "Member",
+            "duration": "January 2024 to Present",
+            "description": "GDSC is a community of developers and designers who are passionate about technology and want to make a difference in the world."
+           
+          }
+        ]
+      }
+    ]
+  }
+  

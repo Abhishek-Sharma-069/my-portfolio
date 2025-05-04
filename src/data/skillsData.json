@@ -1,0 +1,29 @@
+{
+    "languages": [
+      { "name": "Java", "icon": "FaJava", "color": "text-red-500" },
+      { "name": "PHP", "icon": "FaPhp", "color": "text-blue-500" },
+      { "name": "JavaScript", "icon": "FaJsSquare", "color": "text-yellow-500" },
+      { "name": "Python", "icon": "FaPython", "color": "text-blue-400" },
+      { "name": "C", "icon": "SiC", "color": "text-blue-500" },
+      { "name": "C++", "icon": "SiCplusplus", "color": "text-blue-700" }
+    ],
+  
+    "frameworksAndTechnologies": [
+      { "name": "Android", "icon": "FaAndroid", "color": "text-green-500" },
+      { "name": "React", "icon": "FaReact", "color": "text-blue-500" },
+      { "name": "Node.js", "icon": "FaNodeJs", "color": "text-green-600" },
+      { "name": "Next.js", "icon": "SiNextdotjs", "color": "text-white" }
+    ],
+  
+    "toolsAndPlatforms": [
+      { "name": "Android Studio", "icon": "FaAndroid", "color": "text-blue-500" },
+      { "name": "Git", "icon": "FaGitAlt", "color": "text-red-500" },
+      { "name": "Docker", "icon": "FaDocker", "color": "text-blue-500" }
+    ],
+  
+    "databases": [
+      { "name": "MySQL", "icon": "SiMysql", "color": "text-teal-500" },
+      { "name": "MongoDB", "icon": "SiMongodb", "color": "text-green-500" }
+    ]
+  }
+  

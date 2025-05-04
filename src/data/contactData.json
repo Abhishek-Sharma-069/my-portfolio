@@ -1,0 +1,37 @@
+{
+    "title": "Contact",
+    "description": "Feel free to reach out to me for collaborations, projects, or just to say hi!",
+    "socials": [
+      { "name": "LinkedIn", "icon": "FaLinkedin", "url": "https://linkedin.com" },
+      { "name": "Twitter", "icon": "FaTwitter", "url": "https://twitter.com" },
+      { "name": "Instagram", "icon": "FaInstagram", "url": "https://instgram.com" },
+      { "name": "Facebook", "icon": "FaFacebook", "url": "https://facebook.com" },
+      { "name": "GitHub", "icon": "FaGithub", "url": "https://github.com" },
+      { "name": "Discord", "icon": "FaDiscord", "url": "https://github.com" }
+    ],
+    "formFields": [
+      {
+        "id": "name",
+        "label": "Name",
+        "type": "text",
+        "placeholder": "Enter your name"
+      },
+      {
+        "id": "email",
+        "label": "Email",
+        "type": "email",
+        "placeholder": "Enter your email"
+      },
+      {
+        "id": "message",
+        "label": "Message",
+        "type": "textarea",
+        "placeholder": "Enter your message",
+        "rows": 5
+      }
+    ],
+    "submitButton": {
+      "label": "Send Message"
+    }
+  }
+  
