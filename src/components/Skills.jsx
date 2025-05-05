@@ -59,16 +59,16 @@ const Skills = () => {
   );
 
   return (
-    <div className="w-full bg-black text-white py-16 px-6 flex flex-col items-center">
+    <div className="w-full bg-black text-white py-10 px-2 sm:py-16 sm:px-6 flex flex-col items-center">
       <motion.div
         initial={{ y: -30, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.3 }}
         className="container w-full"
       >
-        <div className="flex items-center gap-3 mb-10">
-          <h2 className="text-4xl font-bold text-purple-500">Skills</h2>
-          <div className="h-1 w-24 bg-purple-500 rounded-md"></div>
+        <div className="flex items-center gap-2 sm:gap-3 mb-6 sm:mb-10">
+          <h2 className="text-2xl sm:text-4xl font-bold text-purple-500">Skills</h2>
+          <div className="h-1 w-12 sm:w-24 bg-purple-500 rounded-md"></div>
         </div>
 
         {renderSkillSection("Programming Languages", skillsData.languages, "text-yellow-400")}

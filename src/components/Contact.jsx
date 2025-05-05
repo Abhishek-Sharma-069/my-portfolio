@@ -64,7 +64,7 @@ const Contact = () => {
 
   return (
     <div className="w-full text-white bg-black py-8 sm:py-12 lg:py-16">
-      <div className="container mx-auto px-4 sm:px-6 flex flex-col lg:flex-row gap-8 lg:gap-12">
+      <div className="container mx-auto px-2 sm:px-6 flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12">
         {/* Left Side */}
         <motion.div
           initial={{ x: -50, opacity: 0 }}
@@ -76,10 +76,10 @@ const Contact = () => {
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="flex items-center gap-2 mb-4 sm:mb-6"
+            className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6"
           >
-            <h2 className="text-purple-600 font-bold text-3xl sm:text-4xl">{contactData.title}</h2>
-            <div className="bg-purple-600 h-1 w-20 sm:w-40 rounded-md"></div>
+            <h2 className="text-purple-600 font-bold text-2xl sm:text-3xl md:text-4xl">{contactData.title}</h2>
+            <div className="bg-purple-600 h-1 w-12 sm:w-20 md:w-40 rounded-md"></div>
           </motion.div>
           
           <motion.img
@@ -88,10 +88,10 @@ const Contact = () => {
             transition={{ duration: 0.3, delay: 0.3 }}
             src={contactIllustration}
             alt="Developer Illustration"
-            className="w-full max-w-[250px] sm:max-w-xs lg:max-w-sm my-4 sm:my-6 rounded-lg scale-x-[-1] transform hover:scale-105"
+            className="w-full max-w-[180px] sm:max-w-[250px] lg:max-w-xs my-4 sm:my-6 rounded-lg scale-x-[-1] transform hover:scale-105"
           />
 
-          <p className="text-base sm:text-lg text-gray-300 mb-4 sm:mb-6 px-4 sm:px-0">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-4 sm:mb-6 px-2 sm:px-0">
             {contactData.description}
           </p>
 
@@ -99,7 +99,7 @@ const Contact = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.4 }}
-            className="flex gap-4 sm:gap-6 mb-8 lg:mb-0"
+            className="flex gap-3 sm:gap-4 md:gap-6 mb-8 lg:mb-0 flex-wrap justify-center lg:justify-start"
           >
             {contactData.socials.map((social, index) => {
               const IconComponent = iconMap[social.icon];
@@ -123,9 +123,9 @@ const Contact = () => {
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.5 }}
-          className="w-full lg:w-1/2 bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-lg shadow-lg"
+          className="w-full lg:w-1/2 bg-gray-800 p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg shadow-lg"
         >
-          <form className="flex flex-col gap-4 sm:gap-6" onSubmit={onSubmit}>
+          <form className="flex flex-col gap-3 sm:gap-4 md:gap-6" onSubmit={onSubmit}>
             {submitStatus && (
               <div className={`text-center text-sm ${submitStatus.includes('Thank you') ? 'text-green-500' : 'text-red-500'}`}>
                 {submitStatus}

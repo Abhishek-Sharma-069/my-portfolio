@@ -30,7 +30,7 @@ const Projects = () => {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="container mx-auto px-4 sm:px-6 flex flex-col gap-8 lg:gap-12"
+        className="container mx-auto px-2 sm:px-6 flex flex-col gap-8 lg:gap-12"
       >
         {/* Upper Side */}
         <motion.div
@@ -38,20 +38,25 @@ const Projects = () => {
           className="w-full flex flex-col items-center lg:items-start text-center lg:text-left"
         >
           {/* Left side */}
-          <div className="flex items-center gap-2 mb-4 sm:mb-6">
-            <h2 className="text-purple-600 font-bold text-3xl sm:text-4xl">
-              PROJECTS
-            </h2>
-            <div className="bg-purple-600 h-1 w-20 sm:w-40 rounded-md"></div>
-          </div>
+          <motion.div
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                    className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6"
+                  >
+                    <h2 className="text-purple-600 font-bold text-2xl sm:text-3xl md:text-4xl">
+                      My Projects
+                    </h2>
+                    <div className="bg-purple-600 h-1 w-12 sm:w-20 md:w-40 rounded-md"></div>
+                  </motion.div>
           {/* Left side */}
           <motion.div
             variants={itemVariants}
-            className="w-full max-w-8xl flex justify-between lg:flex-row items-center gap-12 mb-3"
+            className="w-full max-w-8xl flex flex-col lg:flex-row items-center gap-6 sm:gap-12 mb-3"
           >
             <motion.p
               variants={itemVariants}
-              className="w-md text-base leading-relaxed sm:text-lg text-gray-300 mb-4 sm:mb-6 px-4 sm:px-0"
+              className="w-full text-base leading-relaxed sm:text-lg text-gray-300 mb-4 sm:mb-6 px-2 sm:px-0"
             >
               My projects leverage a diverse stack of modern technologies, from
               Android and IoT systems to React-based web applications. I’m most
@@ -65,7 +70,7 @@ const Projects = () => {
               whileHover={{ scale: 1.05 }}
               src={project_illustration}
               alt="Projects Illustration"
-              className="w-full sm:max-w-xs lg:max-w-md my-4 sm:my-6 rounded-lg"
+              className="w-full max-w-xs sm:max-w-xs lg:max-w-md my-4 sm:my-6 rounded-lg"
             />
           </motion.div>
         </motion.div>
@@ -73,7 +78,7 @@ const Projects = () => {
         {/* Project Cards Grid */}
         <motion.div
           variants={containerVariants}
-          className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-6"
+          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           {projectsData.map((project, index) => (
             <motion.div

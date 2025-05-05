@@ -10,26 +10,24 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='w-full h-screen bg-black flex justify-center items-center gap-4 px-4'>
+    <div className='w-full min-h-screen bg-black flex flex-col-reverse md:flex-row justify-center items-center gap-4 px-2 md:px-4 pt-20'>
       <div className='w-full flex items-center justify-center flex-col px-2'>
         <motion.h1 
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className='text-4xl text-white font-bold text-center'
+          className='text-3xl sm:text-4xl text-white font-bold text-center'
         >
           Hello, I'm{' '}
           <span className='text-purple-600'>
             Abhishek Sharma
           </span>
-          
-          
         </motion.h1>
         <motion.h1 
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className='text-4xl text-white font-bold text-center'
+          className='text-2xl sm:text-4xl text-white font-bold text-center'
         >
           <span className='text-purple-600'>
             <TypeAnimation
@@ -46,15 +44,13 @@ const Landing = () => {
               repeat={Infinity}
             />
           </span>
-          
-          
         </motion.h1>
         
         <motion.p 
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className='text-gray-400 font-bold text-center mt-2'
+          className='text-gray-400 font-bold text-center mt-2 text-base sm:text-lg px-2'
         >
           I'm a passionate web developer with a knack for creating dynamic and responsive web applications. I love coding and am always eager to learn new technologies. Let's connect and build something amazing together!
         </motion.p>
@@ -63,17 +59,17 @@ const Landing = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className='w-full flex justify-evenly mt-8 px-3'
+          className='w-full flex flex-col sm:flex-row justify-evenly mt-8 px-1 gap-4 sm:gap-0'
         >
           <button 
             onClick={() => navigate('/contact')}
-            className='text-purple-600 rounded-full bg-black border-2 px-5 py-2'
+            className='text-purple-600 rounded-full bg-black border-2 px-5 py-2 w-full sm:w-auto'
           >
             Contact Me
           </button>
           <button 
             onClick={() => navigate('/projects')}
-            className='text-purple-600 rounded-full bg-black border-2 px-5 py-2'
+            className='text-purple-600 rounded-full bg-black border-2 px-5 py-2 w-full sm:w-auto'
           >
             View Projects
           </button>
@@ -83,7 +79,7 @@ const Landing = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex gap-6 mt-8"
+          className="flex flex-wrap gap-6 mt-8 justify-center"
         >
           <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
             <FaLinkedin />
@@ -103,7 +99,6 @@ const Landing = () => {
           <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
             <FaDiscord />
           </a>
-          
         </motion.div>
       </div>
 
@@ -111,9 +106,9 @@ const Landing = () => {
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className='w-full flex justify-center'
+        className='w-full flex justify-center mb-8 md:mb-0'
       >
-        <img className='text-white max-w-lg object-fit' src={AbhishekImg} alt="Abhishek Sharma" />
+        <img className='text-white max-w-xs sm:max-w-md md:max-w-lg w-full object-contain' src={AbhishekImg} alt="Abhishek Sharma" />
       </motion.div>
     </div>
   );

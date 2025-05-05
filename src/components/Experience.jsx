@@ -12,26 +12,26 @@ const Experience = () => {
   };
 
   return (
-    <div className="w-full bg-black text-white py-14 px-6 flex flex-col items-center">
+    <div className="w-full bg-black text-white py-10 px-2 sm:py-14 sm:px-6 flex flex-col items-center">
       <div className="container w-full">
         {/* Section Heading */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center gap-3 mb-3"
+          className="flex items-center gap-2 sm:gap-3 mb-3"
         >
-          <h2 className="text-4xl font-bold text-purple-500">Experience</h2>
-          <div className="h-1 w-24 bg-purple-500 rounded-md"></div>
+          <h2 className="text-2xl sm:text-4xl font-bold text-purple-500">Experience</h2>
+          <div className="h-1 w-12 sm:w-24 bg-purple-500 rounded-md"></div>
         </motion.div>
 
         {/* Intro Text and Illustration */}
-        <div className="flex flex-col lg:flex-row items-center gap-6 mb-3">
+        <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 mb-3">
           <motion.p
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
-            className="text-gray-300 text-xl leading-relaxed max-w-2xl"
+            className="text-gray-300 text-base sm:text-xl leading-relaxed max-w-2xl mb-4 lg:mb-0"
           >
             Work, Internship and Volunteership — I’ve worked on real-world
             projects as an Application Developer and Frontend Designer,
@@ -47,7 +47,7 @@ const Experience = () => {
             transition={{ duration: 0.3, delay: 0.3 }}
             src={experience}
             alt="experience"
-            className="w-80 sm:w-96 lg:w-[420px] object-contain"
+            className="w-56 sm:w-80 lg:w-96 object-contain"
           />
         </div>
 
