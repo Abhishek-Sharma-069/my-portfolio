@@ -49,13 +49,16 @@ const Resume = () => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3, delay: 0.4 }}
-            className="w-full mb-8 border-2 border-purple-600 rounded-lg overflow-hidden shadow-lg h-72 sm:h-96 md:h-[65vh]"
+            className="w-full max-w-2xl mx-auto mb-8 flex justify-center"
           >
-            <iframe
-              src={`${myResume}#toolbar=0`}
-              title="Abhishek Sharma Resume"
-              className="w-full h-full"
-            ></iframe>
+            <div className="bg-white border-2 border-purple-600 rounded-lg shadow-2xl overflow-hidden" style={{ aspectRatio: '8.7/11', width: '100%', maxWidth: '540px', minHeight: '60vh', height: 'auto' }}>
+              <iframe
+                src={`${myResume}#toolbar=0`}
+                title="Abhishek Sharma Resume"
+                className="w-full h-full"
+                style={{ minHeight: '60vh', height: '100%', border: '0px solid pink', padding: '0px', boxSizing: 'border-box' }}
+              ></iframe>
+            </div>
           </motion.div>
         )}
 
