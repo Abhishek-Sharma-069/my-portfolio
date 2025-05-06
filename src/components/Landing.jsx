@@ -5,12 +5,22 @@ import { motion } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 
 import AbhishekImg from '../assets/images/feeling-proud.svg';
+import { contactData } from '../data/indexData';
+
+const iconMap = {
+  FaFacebook,
+  FaTwitter,
+  FaLinkedin,
+  FaGithub,
+  FaInstagram,
+  FaDiscord,
+};
 
 const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='w-full min-h-screen bg-black flex flex-col-reverse md:flex-row justify-center items-center gap-4 px-2 md:px-4 pt-20'>
+    <div className='w-full min-h-screen bg-black flex flex-col-reverse md:flex-row justify-center items-center gap-4 px-2 md:px-4 pt-0'>
       <div className='w-full flex items-center justify-center flex-col px-2'>
         <motion.h1 
           initial={{ y: -50, opacity: 0 }}
@@ -75,31 +85,27 @@ const Landing = () => {
           </button>
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex flex-wrap gap-6 mt-8 justify-center"
-        >
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaLinkedin />
-          </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaTwitter />
-          </a>
-          <a href="https://instgram.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaInstagram />
-          </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaFacebook />
-          </a>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaGithub />
-          </a>
-          <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-purple-600 text-3xl hover:text-red-600 transition duration-300">
-            <FaDiscord />
-          </a>
-        </motion.div>
+        <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.3, delay: 0.4 }}
+                    className="flex gap-3 sm:gap-4 md:gap-6 mb-8 mt-4 lg:mb-0 flex-wrap justify-center lg:justify-start"
+                  >
+                    {contactData.socials.map((social, index) => {
+                      const IconComponent = iconMap[social.icon];
+                      return (
+                        <a
+                          key={index}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-600 text-3xl hover:text-red-600 transition duration-300"
+                        >
+                          <IconComponent />
+                        </a>
+                      );
+                    })}
+                  </motion.div>
       </div>
 
       <motion.div 

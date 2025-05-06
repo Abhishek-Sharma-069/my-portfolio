@@ -2,12 +2,12 @@
     "title": "Contact",
     "description": "Feel free to reach out to me for collaborations, projects, or just to say hi!",
     "socials": [
-      { "name": "LinkedIn", "icon": "FaLinkedin", "url": "https://linkedin.com" },
-      { "name": "Twitter", "icon": "FaTwitter", "url": "https://twitter.com" },
-      { "name": "Instagram", "icon": "FaInstagram", "url": "https://instgram.com" },
-      { "name": "Facebook", "icon": "FaFacebook", "url": "https://facebook.com" },
-      { "name": "GitHub", "icon": "FaGithub", "url": "https://github.com" },
-      { "name": "Discord", "icon": "FaDiscord", "url": "https://github.com" }
+      { "name": "LinkedIn", "icon": "FaLinkedin", "url": "https://www.linkedin.com/in/abhishek-sharma-069-i/" },
+      { "name": "Twitter", "icon": "FaTwitter", "url": "https://x.com/AbhishekShar069" },
+      { "name": "Instagram", "icon": "FaInstagram", "url": "https://www.instagram.com/pt_abhishek_sharma_069/" },
+      { "name": "Facebook", "icon": "FaFacebook", "url": "https://www.facebook.com/profile.php?id=100026510589313" },
+      { "name": "GitHub", "icon": "FaGithub", "url": "https://github.com/Abhishek-Sharma-069" },
+      { "name": "Discord", "icon": "FaDiscord", "url": "https://discordapp.com/users/abhisheksharma069" }
     ],
     "formFields": [
       {
