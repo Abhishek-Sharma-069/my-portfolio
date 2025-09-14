@@ -11,6 +11,7 @@ const AdminLayout = () => {
                         <li className="mb-3"><Link to="/admin/dashboard" className="block py-2 px-3 rounded hover:bg-purple-700 transition-colors duration-200">Dashboard</Link></li>
                         <li className="mb-3"><Link to="/admin/projects" className="block py-2 px-3 rounded hover:bg-purple-700 transition-colors duration-200">Manage Projects</Link></li>
                         <li className="mb-3"><Link to="/admin/experience" className="block py-2 px-3 rounded hover:bg-purple-700 transition-colors duration-200">Manage Experience</Link></li>
+                        <li className="mb-3"><Link to="/admin/skills" className="block py-2 px-3 rounded hover:bg-purple-700 transition-colors duration-200">Manage Skills</Link></li>
                         <li className="mb-3"><Link to="/admin/resume" className="block py-2 px-3 rounded hover:bg-purple-700 transition-colors duration-200">Manage Resume</Link></li>
                     </ul>
                 </nav>

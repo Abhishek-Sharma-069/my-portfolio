@@ -10,6 +10,7 @@ import LoginPage from './admin/LoginPage';
 import Dashboard from './admin/Dashboard';
 import ProjectsManager from './admin/ProjectsManager';
 import ExperienceManager from './admin/ExperienceManager';
+import SkillsManager from './admin/SkillsManager';
 import ResumeManager from './admin/ResumeManager';
 import ProtectedRoute from './admin/ProtectedRoute';
 
@@ -49,6 +50,7 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="projects" element={<ProjectsManager />} />
               <Route path="experience" element={<ExperienceManager />} />
+              <Route path="skills" element={<SkillsManager />} />
               <Route path="resume" element={<ResumeManager />} />
             </Route>
           </Route>
