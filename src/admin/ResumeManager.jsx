@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 import { useSelector, useDispatch } from 'react-redux';
 import { setResumeUrl } from '../redux/slices/resumeSlice';
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 
 const ResumeManager = () => {
     const resumeUrl = useSelector((state) => state.resume.resumeUrl);
