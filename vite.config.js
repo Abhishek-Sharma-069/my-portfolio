@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      external: ['axios'], // Externalize axios
+      external: ['@reduxjs/toolkit'], // Externalize @reduxjs/toolkit
     },
   },
 });
