@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 import { motion } from "framer-motion";
 import { AiOutlinePlusCircle, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
@@ -62,7 +62,7 @@ const SkillsManager = () => {
 
     const fetchSkills = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/portfolio-data');
+            const res = await axiosInstance.get('/portfolio-data');
             setSkills(res.data.skills || {
                 "General": [],
                 "Web Development": [],
@@ -103,7 +103,7 @@ const SkillsManager = () => {
                 });
             }
 
-            await axios.put('http://localhost:5000/api/portfolio-data', 
+            await axiosInstance.put('/portfolio-data', 
                 { skills: updatedSkills }, 
                 config
             );
@@ -136,7 +136,7 @@ const SkillsManager = () => {
                 const updatedSkills = { ...skills };
                 updatedSkills[category].splice(index, 1);
                 
-                await axios.put('http://localhost:5000/api/portfolio-data', 
+                await axiosInstance.put('/portfolio-data', 
                     { skills: updatedSkills }, 
                     config
                 );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 
 const ExperienceManager = () => {
@@ -13,7 +13,7 @@ const ExperienceManager = () => {
     }, []);
 
     const fetchExperience = async () => {
-        const res = await axios.get('http://localhost:5000/api/portfolio-data');
+        const res = await axiosInstance.get('/portfolio-data');
         setExperience(res.data.experience);
     };
 
@@ -26,9 +26,9 @@ const ExperienceManager = () => {
         const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
 
         if (editingExperience) {
-            await axios.put(`http://localhost:5000/api/experience/${editingExperience._id}`, formData, config);
+            await axiosInstance.put(`/experience/${editingExperience._id}`, formData, config);
         } else {
-            await axios.post('http://localhost:5000/api/experience', formData, config);
+            await axiosInstance.post('/experience', formData, config);
         }
         fetchExperience();
         setFormData({ section: 'Work', company: '', role: '', duration: '', description: '' });
@@ -47,7 +47,7 @@ const ExperienceManager = () => {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
             data: { section: sectionType }
         };
-        await axios.delete(`http://localhost:5000/api/experience/${id}`, config);
+        await axiosInstance.delete(`/experience/${id}`, config);
         fetchExperience();
     };
 
@@ -75,7 +75,19 @@ const ExperienceManager = () => {
                         <input type="text" name="company" value={formData.company} onChange={handleInputChange} placeholder="Company/Organization" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" />
                         <input type="text" name="role" value={formData.role} onChange={handleInputChange} placeholder="Role" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" />
                         <input type="text" name="duration" value={formData.duration} onChange={handleInputChange} placeholder="Duration" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" />
-                        <input type="text" name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" />
+                    </div>
+                    
+                    {/* Description as textarea */}
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium text-white mb-2">Description</label>
+                        <textarea 
+                            name="description" 
+                            value={formData.description} 
+                            onChange={handleInputChange} 
+                            placeholder="Enter experience description..."
+                            rows={4}
+                            className="w-full p-3 border border-purple-600 rounded bg-gray-700 text-white resize-vertical"
+                        />
                     </div>
                     <button type="submit" className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300">{editingExperience ? 'Update' : 'Add'}</button>
                 </form>

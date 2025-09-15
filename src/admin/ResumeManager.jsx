@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
+import { useSelector, useDispatch } from 'react-redux';
+import { setResumeUrl } from '../redux/slices/resumeSlice';
+import axios from 'axios';
 
 const ResumeManager = () => {
-    const [resumeUrl, setResumeUrl] = useState('');
+    const resumeUrl = useSelector((state) => state.resume.resumeUrl);
+    const dispatch = useDispatch();
     const [file, setFile] = useState(null);
     const [showForm, setShowForm] = useState(false); // State to control form visibility
     const [showResume, setShowResume] = useState(false); // State to control resume iframe visibility
@@ -13,9 +17,8 @@ const ResumeManager = () => {
 
     const fetchResumeUrl = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/portfolio-data');
-            const data = await response.json();
-            setResumeUrl(data.resumeUrl);
+            const response = await axiosInstance.get('/portfolio-data');
+            dispatch(setResumeUrl(response.data.resumeUrl));
         } catch (error) {
             console.error('Error fetching resume URL:', error);
         }
@@ -31,20 +34,13 @@ const ResumeManager = () => {
         formData.append('resume', file);
 
         try {
-            const response = await fetch('http://localhost:5000/api/resume', {
-                method: 'PUT',
+            const response = await axiosInstance.put('/resume', formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: formData
+                }
             });
 
-            if (!response.ok) {
-                throw new Error('Upload failed');
-            }
-
-            const result = await response.json();
-            setResumeUrl(result.resumeUrl);
+            dispatch(setResumeUrl(response.data.resumeUrl));
             setFile(null);
             setShowForm(false); // Close form on successful submission
         } catch (error) {

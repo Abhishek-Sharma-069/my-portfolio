@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import axios from "axios";
+import axiosInstance from "../config/axios";
 import { GrDown } from "react-icons/gr";
 import experience from "../assets/images/experience.svg";
 
@@ -13,7 +13,7 @@ const Experience = () => {
     const fetchExperience = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:5000/api/portfolio-data');
+        const res = await axiosInstance.get('/portfolio-data');
         setExperienceData(res.data.experience);
       } catch (error) {
         console.error('Error fetching experience data:', error);

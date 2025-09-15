@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
@@ -11,7 +11,7 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post('http://localhost:5000/api/auth/login', { username, password });
+            const res = await axiosInstance.post('/auth/login', { username, password });
             localStorage.setItem('token', res.data.token);
             navigate('/admin/dashboard');
         } catch (err) {

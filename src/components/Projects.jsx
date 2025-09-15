@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-import axios from 'axios'; // Import axios
+import axiosInstance from '../config/axios';
 
 import project_illustration from "../assets/images/mindmap.svg";
 
@@ -28,7 +28,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/portfolio-data');
+        const res = await axiosInstance.get('/portfolio-data');
         setProjects(res.data.projects);
       } catch (error) {
         console.error('Error fetching projects:', error);

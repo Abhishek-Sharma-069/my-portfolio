@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaFileDownload } from "react-icons/fa";
-import axios from 'axios';
+import axiosInstance from '../config/axios';
+
 
 const Resume = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -19,7 +20,7 @@ const Resume = () => {
     const fetchResumeUrl = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('http://localhost:5000/api/portfolio-data');
+        const res = await axiosInstance.get('/portfolio-data');
         setResumeUrl(res.data.resumeUrl);
       } catch (error) {
         console.error('Error fetching resume URL:', error);
@@ -97,7 +98,7 @@ const Resume = () => {
             whileHover={{ scale: 1.05 }}
             onClick={async () => {
               try {
-                const response = await fetch(resumeUrl);
+                const response = await axiosInstance.get(resumeUrl, { responseType: 'blob' });
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');

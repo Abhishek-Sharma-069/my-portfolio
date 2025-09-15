@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../config/axios';
 import { motion } from "framer-motion";
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 
@@ -23,7 +23,7 @@ const ProjectsManager = () => {
     }, []);
 
     const fetchProjects = async () => {
-        const res = await axios.get('http://localhost:5000/api/portfolio-data');
+        const res = await axiosInstance.get('/portfolio-data');
         setProjects(res.data.projects);
     };
 
@@ -68,10 +68,10 @@ const ProjectsManager = () => {
         try {
             if (editingProject) {
                 console.log('🔄 Frontend: Updating project with ID:', editingProject._id);
-                await axios.put(`http://localhost:5000/api/projects/${editingProject._id}`, data, config);
+                await axiosInstance.put(`/projects/${editingProject._id}`, data, config);
             } else {
                 console.log('➕ Frontend: Creating new project');
-                await axios.post('http://localhost:5000/api/projects', data, config);
+                await axiosInstance.post('/projects', data, config);
             }
             fetchProjects();
             setFormData({ title: '', description: '', buttonText: '', buttonLink: '', image: null, currentImage: '' });
@@ -97,7 +97,7 @@ const ProjectsManager = () => {
 
     const handleDelete = async (id) => {
         const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
-        await axios.delete(`http://localhost:5000/api/projects/${id}`, config);
+        await axiosInstance.delete(`/projects/${id}`, config);
         fetchProjects();
     };
 
@@ -131,26 +131,39 @@ const ProjectsManager = () => {
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
-                        <input type="text" name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
                         <input type="text" name="buttonText" value={formData.buttonText} onChange={handleInputChange} placeholder="Button Text" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
                         <input type="text" name="buttonLink" value={formData.buttonLink} onChange={handleInputChange} placeholder="Button Link" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
+                    </div>
+                    
+                    {/* Description as textarea */}
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium text-white mb-2">Description</label>
+                        <textarea 
+                            name="description" 
+                            value={formData.description} 
+                            onChange={handleInputChange} 
+                            placeholder="Enter project description..."
+                            rows={4}
+                            className="w-full p-3 border border-purple-600 rounded bg-gray-700 text-white resize-vertical"
+                            required 
+                        />
+                    </div>
                         
-                        {/* File input with better styling */}
-                        <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-white mb-2">
-                                {editingProject ? 'New Image (optional - leave empty to keep current)' : 'Project Image'}
-                            </label>
-                            <input 
-                                type="file" 
-                                name="image" 
-                                onChange={handleFileChange} 
-                                accept="image/*"
-                                className="w-full p-2 border border-purple-600 rounded bg-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700"
-                            />
-                            {formData.image && (
-                                <p className="text-sm text-green-400 mt-1">✓ New image selected: {formData.image.name}</p>
-                            )}
-                        </div>
+                    {/* File input with better styling */}
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium text-white mb-2">
+                            {editingProject ? 'New Image (optional - leave empty to keep current)' : 'Project Image'}
+                        </label>
+                        <input 
+                            type="file" 
+                            name="image" 
+                            onChange={handleFileChange} 
+                            accept="image/*"
+                            className="w-full p-2 border border-purple-600 rounded bg-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700"
+                        />
+                        {formData.image && (
+                            <p className="text-sm text-green-400 mt-1">✓ New image selected: {formData.image.name}</p>
+                        )}
                     </div>
                     <button type="submit" className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300">{editingProject ? 'Update' : 'Add'}</button>
                 </form>

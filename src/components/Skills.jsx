@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import axios from "axios";
+import axiosInstance from '../config/axios';
 import {
   FaJava, FaPhp, FaJsSquare, FaPython, FaReact,
   FaNodeJs, FaAndroid, FaGitAlt, FaDocker, FaHtml5,
@@ -39,7 +39,7 @@ const Skills = () => {
 
   const fetchSkills = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/portfolio-data');
+      const res = await axiosInstance.get('/portfolio-data');
       console.log('API Response:', res.data);
       console.log('Skills from API:', res.data.skills);
       
@@ -203,5 +203,7 @@ const Skills = () => {
     </div>
   );
 };
+
+
 
 export default Skills;
