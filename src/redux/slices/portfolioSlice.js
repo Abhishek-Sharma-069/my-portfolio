@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axiosInstance from '../../config/axios';
+import axiosInstance from '../../utils/axiosInstance';
 
 // Async thunk for fetching portfolio data
 export const fetchPortfolioData = createAsyncThunk(
