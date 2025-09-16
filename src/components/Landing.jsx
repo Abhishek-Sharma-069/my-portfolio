@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaFacebook, FaTwitter, FaLinkedin, FaGithub, FaInstagram ,FaDiscord } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion as Motion } from "framer-motion";
 import { TypeAnimation } from 'react-type-animation';
 
 import AbhishekImg from '../assets/images/feeling-proud.svg';
@@ -22,7 +22,7 @@ const Landing = () => {
   return (
     <div className='w-full min-h-screen bg-black flex flex-col-reverse md:flex-row justify-center items-center gap-4 px-2 md:px-4 pt-0'>
       <div className='w-full flex items-center justify-center flex-col px-2'>
-        <motion.h1 
+        <Motion.h1 
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -32,8 +32,8 @@ const Landing = () => {
           <span className='text-purple-600'>
             Abhishek Sharma
           </span>
-        </motion.h1>
-        <motion.h1 
+        </Motion.h1>
+        <Motion.h1 
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -54,18 +54,18 @@ const Landing = () => {
               repeat={Infinity}
             />
           </span>
-        </motion.h1>
+        </Motion.h1>
         
-        <motion.p 
+        <Motion.p 
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className='text-gray-400 font-bold text-center mt-2 text-base sm:text-lg px-2'
         >
           I'm a passionate web developer with a knack for creating dynamic and responsive web applications. I love coding and am always eager to learn new technologies. Let's connect and build something amazing together!
-        </motion.p>
+        </Motion.p>
 
-        <motion.div 
+        <Motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -83,9 +83,9 @@ const Landing = () => {
           >
             View Projects
           </button>
-        </motion.div>
+        </Motion.div>
 
-        <motion.div
+        <Motion.div
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.4 }}
@@ -105,17 +105,17 @@ const Landing = () => {
                         </a>
                       );
                     })}
-                  </motion.div>
+                  </Motion.div>
       </div>
 
-      <motion.div 
+      <Motion.div 
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         className='w-full flex justify-center mb-8 md:mb-0'
       >
         <img className='text-white max-w-xs sm:max-w-md md:max-w-lg w-full object-contain' src={AbhishekImg} alt="Abhishek Sharma" />
-      </motion.div>
+      </Motion.div>
     </div>
   );
 };

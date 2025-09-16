@@ -7,18 +7,64 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Local environment files
 *.local
+.env*
 
 # Editor directories and files
-.vscode/*
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# System files
+Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE specific files
+*.iml
+*.ipr
+*.iws
+
+# MacOS specific files
+.AppleDouble
+.LSOverride
+
+# Windows specific files
+Desktop.ini
+$RECYCLE.BIN/
+
+# Git specific files
+.git/
+.gitignore
+
+# Other unnecessary files
+coverage/
+*.bak
+*.old
+*.orig
+*.rej
+*.swp
+*.lock
+*.pid
+*.seed
+*.pid.lock
+*.log.*
+*.log.[0-9]*
+.env

@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { experienceData } from "../data/indexData.js";
+import axiosInstance from "../config/axios";
 import { GrDown } from "react-icons/gr";
 import experience from "../assets/images/experience.svg";
 
 const Experience = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
+  const [experienceData, setExperienceData] = useState({ sections: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchExperience = async () => {
+      try {
+        setLoading(true);
+        const res = await axiosInstance.get('/portfolio-data');
+        setExperienceData(res.data.experience);
+      } catch (error) {
+        console.error('Error fetching experience data:', error);
+        // Fallback to static data if API fails
+        setExperienceData({ sections: [] });
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExperience();
+  }, []);
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
@@ -51,8 +70,22 @@ const Experience = () => {
           />
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-8">
+            <div className="text-purple-500 text-lg">Loading experience data...</div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && (!experienceData.sections || experienceData.sections.length === 0) && (
+          <div className="text-center py-8">
+            <div className="text-gray-400 text-lg">No experience data available</div>
+          </div>
+        )}
+
         {/* Accordion Timeline */}
-        {experienceData.sections.map((section, index) => (
+        {!loading && experienceData.sections && experienceData.sections.length > 0 && experienceData.sections.map((section, index) => (
           <motion.div
             key={section.type}
             initial={{ opacity: 0, y: 20 }}

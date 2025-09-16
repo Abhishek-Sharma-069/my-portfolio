@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-import { projectsData } from "../data/indexData.js";
-import chatbotImage from "../assets/projectCard/chatbot.jpg";
-import projectImage from "../assets/projectCard/project_image.jpg";
+import axiosInstance from '../config/axios';
+
 import project_illustration from "../assets/images/mindmap.svg";
 
 const containerVariants = {
@@ -24,6 +23,20 @@ const itemVariants = {
 };
 
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await axiosInstance.get('/portfolio-data');
+        setProjects(res.data.projects);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      }
+    };
+    fetchProjects();
+  }, []);
+
   return (
     <div className="w-full text-white bg-black py-8 sm:py-12 lg:py-16">
       <motion.div
@@ -80,15 +93,15 @@ const Projects = () => {
           variants={containerVariants}
           className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
         >
-          {projectsData.map((project, index) => (
+          {projects.map((project, index) => (
             <motion.div
-              key={project.id}
+              key={project._id} // Use project._id as key
               variants={itemVariants}
               whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
               className="bg-gray-800 border border-purple-600 rounded-lg overflow-hidden shadow-lg flex flex-col max-w-[320px] mx-auto w-full"
             >
               <img
-                src={projectImage}
+                src={project.image} // Use project.image from fetched data
                 alt={project.title}
                 className="w-full h-40 object-cover"
               />
