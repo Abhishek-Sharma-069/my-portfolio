@@ -85,7 +85,7 @@ const Experience = () => {
         )}
 
         {/* Accordion Timeline */}
-        {!loading && experienceData.sections && experienceData.sections.length > 0 && experienceData.sections.map((section, index) => (
+        {!loading && experienceData?.sections && experienceData.sections.length > 0 && experienceData?.sections?.map((section, index) => (
           <motion.div
             key={section.type}
             initial={{ opacity: 0, y: 20 }}
