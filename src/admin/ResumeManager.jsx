@@ -1,28 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 import { useSelector, useDispatch } from 'react-redux';
-import { setResumeUrl } from '../redux/slices/resumeSlice';
+import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
 import axiosInstance from '../config/axios';
 
 const ResumeManager = () => {
-    const resumeUrl = useSelector((state) => state.resume.resumeUrl);
+    const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? '');
     const dispatch = useDispatch();
     const [file, setFile] = useState(null);
     const [showForm, setShowForm] = useState(false); // State to control form visibility
     const [showResume, setShowResume] = useState(false); // State to control resume iframe visibility
 
-    useEffect(() => {
-        fetchResumeUrl();
-    }, []);
-
-    const fetchResumeUrl = async () => {
-        try {
-            const response = await axiosInstance.get('/portfolio-data');
-            dispatch(setResumeUrl(response.data.resumeUrl));
-        } catch (error) {
-            console.error('Error fetching resume URL:', error);
-        }
-    };
+    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -34,13 +23,13 @@ const ResumeManager = () => {
         formData.append('resume', file);
 
         try {
-            const response = await axiosInstance.put('/resume', formData, {
+            await axiosInstance.put('/resume', formData, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             });
 
-            dispatch(setResumeUrl(response.data.resumeUrl));
+            await refetchPortfolio();
             setFile(null);
             setShowForm(false); // Close form on successful submission
         } catch (error) {

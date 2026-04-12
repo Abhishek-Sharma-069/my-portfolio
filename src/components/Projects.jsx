@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import { FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-import axiosInstance from '../config/axios';
 
 import project_illustration from "../assets/images/mindmap.svg";
 
@@ -23,19 +23,16 @@ const itemVariants = {
 };
 
 const Projects = () => {
-  const [projects, setProjects] = useState([]);
+  const projects = useSelector((state) => state.portfolio.data?.projects ?? []);
+  const loading = useSelector((state) => state.portfolio.loading);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await axiosInstance.get('/portfolio-data');
-        setProjects(res.data.projects);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      }
-    };
-    fetchProjects();
-  }, []);
+  if (loading && !projects.length) {
+    return (
+      <div className="w-full text-white bg-black py-16 flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full text-white bg-black py-8 sm:py-12 lg:py-16">

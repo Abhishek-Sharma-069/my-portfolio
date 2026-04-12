@@ -1,21 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../config/axios'
 
-// Async thunk for fetching portfolio data
+// Async thunk for fetching portfolio data (skipped if data exists unless arg.force is true)
 export const fetchPortfolioData = createAsyncThunk(
     'portfolio/fetchPortfolioData',
-    async (_, { getState, rejectWithValue }) => {
-        const { portfolio } = getState();
-        if (portfolio.data) {
-            // Prevent duplicate API calls
-            return portfolio.data;
-        }
+    async (_, { rejectWithValue }) => {
         try {
             const response = await axiosInstance.get('/portfolio-data');
             return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || 'Error fetching portfolio data');
         }
+    },
+    {
+        condition: (arg, { getState }) => {
+            const force = arg?.force === true;
+            const { portfolio } = getState();
+            if (portfolio.data && !force) {
+                return false;
+            }
+            return true;
+        },
     }
 );
 

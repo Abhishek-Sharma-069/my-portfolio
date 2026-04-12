@@ -3,6 +3,8 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar, Landing, About, Skills, Projects, Contact, Experience, Resume } from './index.js';
 import Preloader from './components/Preloader.jsx';
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchPortfolioData } from './redux/slices/portfolioSlice';
 
 // Admin components
 import AdminLayout from './admin/AdminLayout';
@@ -15,8 +17,13 @@ import ResumeManager from './admin/ResumeManager';
 import ProtectedRoute from './admin/ProtectedRoute';
 
 function App() {
+  const dispatch = useDispatch();
   const location = useLocation();
   const [loading, setLoading] = useState(location.pathname === '/');
+
+  useEffect(() => {
+    dispatch(fetchPortfolioData());
+  }, [dispatch]);
 
   useEffect(() => {
     if (loading) {

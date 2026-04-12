@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../config/axios';
+import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 
 const ExperienceManager = () => {
-    const [experience, setExperience] = useState({ sections: [] });
+    const dispatch = useDispatch();
+    const experience = useSelector((state) => state.portfolio.data?.experience ?? { sections: [] });
     const [formData, setFormData] = useState({ section: 'Work', company: '', role: '', duration: '', description: '' });
     const [editingExperience, setEditingExperience] = useState(null);
     const [showForm, setShowForm] = useState(false); // State to control form visibility
 
-    useEffect(() => {
-        fetchExperience();
-    }, []);
-
-    const fetchExperience = async () => {
-        const res = await axiosInstance.get('/portfolio-data');
-        setExperience(res.data.experience);
-    };
+    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -30,7 +26,7 @@ const ExperienceManager = () => {
         } else {
             await axiosInstance.post('/experience', formData, config);
         }
-        fetchExperience();
+        refetchPortfolio();
         setFormData({ section: 'Work', company: '', role: '', duration: '', description: '' });
         setEditingExperience(null);
         setShowForm(false); // Close form on successful submission
@@ -48,7 +44,7 @@ const ExperienceManager = () => {
             data: { section: sectionType }
         };
         await axiosInstance.delete(`/experience/${id}`, config);
-        fetchExperience();
+        refetchPortfolio();
     };
 
     return (

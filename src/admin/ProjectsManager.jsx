@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../config/axios';
+import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
 import { motion } from "framer-motion";
 import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
 
@@ -13,19 +15,13 @@ const itemVariants = {
   };
 
 const ProjectsManager = () => {
-    const [projects, setProjects] = useState([]);
+    const dispatch = useDispatch();
+    const projects = useSelector((state) => state.portfolio.data?.projects ?? []);
     const [formData, setFormData] = useState({ title: '', description: '', buttonText: '', buttonLink: '', image: null, currentImage: '' });
     const [editingProject, setEditingProject] = useState(null);
     const [showForm, setShowForm] = useState(false); // State to control form visibility
 
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    const fetchProjects = async () => {
-        const res = await axiosInstance.get('/portfolio-data');
-        setProjects(res.data.projects);
-    };
+    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -73,7 +69,7 @@ const ProjectsManager = () => {
                 console.log('➕ Frontend: Creating new project');
                 await axiosInstance.post('/projects', data, config);
             }
-            fetchProjects();
+            refetchPortfolio();
             setFormData({ title: '', description: '', buttonText: '', buttonLink: '', image: null, currentImage: '' });
             setEditingProject(null);
             setShowForm(false); // Close form on successful submission
@@ -98,7 +94,7 @@ const ProjectsManager = () => {
     const handleDelete = async (id) => {
         const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
         await axiosInstance.delete(`/projects/${id}`, config);
-        fetchProjects();
+        refetchPortfolio();
     };
 
     return (

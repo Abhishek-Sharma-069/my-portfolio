@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../config/axios';
+import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
 import { motion } from "framer-motion";
 import { AiOutlinePlusCircle, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
@@ -12,14 +14,18 @@ const itemVariants = {
     },
   };
 
+const defaultSkillsShape = {
+    "General": [],
+    "Web Development": [],
+    "Mobile Development": [],
+    "Databases": [],
+    "DevOps & Tools": []
+};
+
 const SkillsManager = () => {
-    const [skills, setSkills] = useState({
-        "General": [],
-        "Web Development": [],
-        "Mobile Development": [],
-        "Databases": [],
-        "DevOps & Tools": []
-    });
+    const dispatch = useDispatch();
+    const portfolioSkills = useSelector((state) => state.portfolio.data?.skills);
+    const [skills, setSkills] = useState(defaultSkillsShape);
     const [formData, setFormData] = useState({ 
         category: 'General', 
         name: '', 
@@ -56,24 +62,18 @@ const SkillsManager = () => {
         'text-emerald-500', 'text-violet-500', 'text-fuchsia-500', 'text-rose-500'
     ];
 
-    useEffect(() => {
-        fetchSkills();
-    }, []);
+    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
-    const fetchSkills = async () => {
-        try {
-            const res = await axiosInstance.get('/portfolio-data');
-            setSkills(res.data.skills || {
-                "General": [],
-                "Web Development": [],
-                "Mobile Development": [],
-                "Databases": [],
-                "DevOps & Tools": []
-            });
-        } catch (error) {
-            console.error('Error fetching skills:', error);
-        }
-    };
+    useEffect(() => {
+        if (!portfolioSkills) return;
+        setSkills({
+            "General": Array.isArray(portfolioSkills.General) ? portfolioSkills.General : [],
+            "Web Development": Array.isArray(portfolioSkills["Web Development"]) ? portfolioSkills["Web Development"] : [],
+            "Mobile Development": Array.isArray(portfolioSkills["Mobile Development"]) ? portfolioSkills["Mobile Development"] : [],
+            "Databases": Array.isArray(portfolioSkills.Databases) ? portfolioSkills.Databases : [],
+            "DevOps & Tools": Array.isArray(portfolioSkills["DevOps & Tools"]) ? portfolioSkills["DevOps & Tools"] : []
+        });
+    }, [portfolioSkills]);
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -108,7 +108,7 @@ const SkillsManager = () => {
                 config
             );
             
-            fetchSkills();
+            refetchPortfolio();
             setFormData({ category: 'General', name: '', icon: '', color: 'text-blue-500' });
             setEditingSkill(null);
             setShowForm(false);
@@ -141,7 +141,7 @@ const SkillsManager = () => {
                     config
                 );
                 
-                fetchSkills();
+                refetchPortfolio();
             } catch (error) {
                 console.error('Error deleting skill:', error);
             }

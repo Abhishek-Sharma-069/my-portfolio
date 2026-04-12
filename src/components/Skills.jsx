@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
-import axiosInstance from '../config/axios';
 import {
   FaJava, FaPhp, FaJsSquare, FaPython, FaReact,
   FaNodeJs, FaAndroid, FaGitAlt, FaDocker, FaHtml5,
@@ -24,46 +24,23 @@ const iconMap = {
 };
 
 const Skills = () => {
-  const [skills, setSkills] = useState({
-    "General": [],
-    "Web Development": [],
-    "Mobile Development": [],
-    "Databases": [],
-    "DevOps & Tools": []
-  });
-  const [loading, setLoading] = useState(true);
+  const apiSkills = useSelector((state) => state.portfolio.data?.skills);
+  const loading = useSelector((state) => state.portfolio.loading);
+  const error = useSelector((state) => state.portfolio.error);
 
-  useEffect(() => {
-    fetchSkills();
-  }, []);
-
-  const fetchSkills = async () => {
-    try {
-      const res = await axiosInstance.get('/portfolio-data');
-      console.log('API Response:', res.data);
-      console.log('Skills from API:', res.data.skills);
-      
-      const apiSkills = res.data.skills || {};
-      
-      // Ensure each category is an array
-      const formattedSkills = {
-        "General": Array.isArray(apiSkills.General) ? apiSkills.General : [],
-        "Web Development": Array.isArray(apiSkills["Web Development"]) ? apiSkills["Web Development"] : [],
-        "Mobile Development": Array.isArray(apiSkills["Mobile Development"]) ? apiSkills["Mobile Development"] : [],
-        "Databases": Array.isArray(apiSkills.Databases) ? apiSkills.Databases : [],
-        "DevOps & Tools": Array.isArray(apiSkills["DevOps & Tools"]) ? apiSkills["DevOps & Tools"] : []
-      };
-      
-      console.log('Formatted Skills:', formattedSkills);
-      setSkills(formattedSkills);
-    } catch (error) {
-      console.error('Error fetching skills:', error);
-      // Fallback to static data if API fails
-      setSkills(skillsData);
-    } finally {
-      setLoading(false);
+  const skills = useMemo(() => {
+    if (error && !apiSkills) {
+      return skillsData;
     }
-  };
+    const raw = apiSkills || {};
+    return {
+      "General": Array.isArray(raw.General) ? raw.General : [],
+      "Web Development": Array.isArray(raw["Web Development"]) ? raw["Web Development"] : [],
+      "Mobile Development": Array.isArray(raw["Mobile Development"]) ? raw["Mobile Development"] : [],
+      "Databases": Array.isArray(raw.Databases) ? raw.Databases : [],
+      "DevOps & Tools": Array.isArray(raw["DevOps & Tools"]) ? raw["DevOps & Tools"] : []
+    };
+  }, [apiSkills, error]);
 
   const renderSkillCard = (category, skills, index) => {
     // Ensure skills is always an array

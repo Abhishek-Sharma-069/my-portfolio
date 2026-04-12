@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { FaFileDownload } from "react-icons/fa";
 import axiosInstance from '../config/axios';
@@ -6,31 +7,14 @@ import axiosInstance from '../config/axios';
 
 const Resume = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [resumeUrl, setResumeUrl] = useState('');
-  const [loading, setLoading] = useState(true);
+  const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? '');
+  const loading = useSelector((state) => state.portfolio.loading);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 640);
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const fetchResumeUrl = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.get('/portfolio-data');
-        setResumeUrl(res.data.resumeUrl);
-      } catch (error) {
-        console.error('Error fetching resume URL:', error);
-        // Fallback to empty string if API fails
-        setResumeUrl('');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchResumeUrl();
   }, []);
 
   return (

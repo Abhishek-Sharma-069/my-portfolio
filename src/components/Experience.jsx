@@ -1,30 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
-import axiosInstance from "../config/axios";
 import { GrDown } from "react-icons/gr";
 import experience from "../assets/images/experience.svg";
 
 const Experience = () => {
   const [activeAccordion, setActiveAccordion] = useState(null);
-  const [experienceData, setExperienceData] = useState({ sections: [] });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchExperience = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.get('/portfolio-data');
-        setExperienceData(res.data.experience);
-      } catch (error) {
-        console.error('Error fetching experience data:', error);
-        // Fallback to static data if API fails
-        setExperienceData({ sections: [] });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchExperience();
-  }, []);
+  const experienceData = useSelector((state) => state.portfolio.data?.experience ?? { sections: [] });
+  const loading = useSelector((state) => state.portfolio.loading);
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
