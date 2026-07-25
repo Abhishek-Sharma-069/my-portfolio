@@ -1,42 +1,31 @@
 export const githubProfile = {
   username: "Abhishek-Sharma-069",
   profileUrl: "https://github.com/Abhishek-Sharma-069",
+  contributionsApi: "https://github-contributions-api.jogruber.de/v4/Abhishek-Sharma-069?y=last",
   email: "abhello12@gmail.com",
   handle: "@thelone.boy",
-  tagline: "Campus Ambassador @ GeeksforGeeks | CSE, Batch of 2022–2026, AKTU",
+  tagline: "Campus Ambassador @ GeeksforGeeks · CSE · AKTU 2022–2026",
   highlights: [
-    "Contributor at GirlScript Summer of Code, 2024 Extended",
-    "Currently learning Web Dev & Data Analytics",
-    "Ask me about Full Stack, Frontend & Backend",
+    "GSSoC 2024 Extended contributor",
+    "Full-stack & AI systems",
+    "Building in public",
   ],
   identity: {
     pronouns: "He / Him",
-    code: ["C++", "Python", "Java", "JavaScript", "HTML", "CSS", "MySQL"],
-    askMeAbout: ["Web Dev", "Frontend", "Backend", "Python", "Java"],
-    frontend: ["HTML", "CSS", "JS", "Tailwind", "React"],
-    backend: ["Node.js", "Express.js", "Databases"],
+    code: ["C++", "Python", "Java", "JavaScript", "React", "MySQL"],
   },
   education: [
     {
       qualification: "B.Tech CSE",
-      institute: "United Institute of Technology Prayagraj",
-      board: "AKTU",
-      years: "Nov 2022 – Present",
+      institute: "United Institute of Technology",
+      years: "2022 – Present",
       score: "8 CGPA",
     },
     {
       qualification: "Intermediate",
-      institute: "C.L. Inter College Chhittepatti Sultanpur",
-      board: "UP Board",
+      institute: "C.L. Inter College, Sultanpur",
       years: "2020 – 2021",
       score: "79.17%",
-    },
-    {
-      qualification: "High School",
-      institute: "C.L. Inter College Chhittepatti Sultanpur",
-      board: "UP Board",
-      years: "2018 – 2019",
-      score: "76.67%",
     },
   ],
   platforms: [
@@ -47,18 +36,60 @@ export const githubProfile = {
   ],
 };
 
-const theme = {
-  bg: "030303",
-  title: "fafafa",
-  text: "a1a1aa",
-  icon: "7dd3fc",
-  ring: "c4b5fd",
-};
+export function summarizeContributions(contributions = []) {
+  let activeDays = 0;
+  let bestDay = { date: null, count: 0 };
+  let currentStreak = 0;
+  let maxStreak = 0;
+  let streak = 0;
 
-export const githubStatCards = {
-  stats: `https://github-readme-stats.vercel.app/api?username=${githubProfile.username}&show_icons=true&hide_border=true&bg_color=${theme.bg}&title_color=${theme.title}&text_color=${theme.text}&icon_color=${theme.icon}&ring_color=${theme.ring}`,
-  streak: `https://github-readme-streak-stats.herokuapp.com/?user=${githubProfile.username}&theme=dark&hide_border=true&background=${theme.bg}&stroke=${theme.bg}&ring=${theme.icon}&fire=${theme.ring}&currStreakLabel=${theme.title}&sideLabels=${theme.text}&currStreakNum=${theme.title}&sideNums=${theme.text}&dates=${theme.text}`,
-  topLangs: `https://github-readme-stats.vercel.app/api/top-langs?username=${githubProfile.username}&layout=compact&hide_border=true&bg_color=${theme.bg}&title_color=${theme.title}&text_color=${theme.text}`,
-  activity: `https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=${githubProfile.username}&theme=github_dark&hide_border=true`,
-  views: `https://komarev.com/ghpvc/?username=${githubProfile.username}&label=Profile%20views&color=7dd3fc&style=flat`,
-};
+  const sorted = [...contributions].sort((a, b) => a.date.localeCompare(b.date));
+  const today = sorted[sorted.length - 1]?.date;
+
+  for (const day of sorted) {
+    if (day.count > 0) {
+      activeDays += 1;
+      streak += 1;
+      maxStreak = Math.max(maxStreak, streak);
+      if (day.count > bestDay.count) bestDay = { date: day.date, count: day.count };
+    } else {
+      streak = 0;
+    }
+  }
+
+  // current streak ending at latest day
+  for (let i = sorted.length - 1; i >= 0; i--) {
+    if (sorted[i].count > 0) currentStreak += 1;
+    else break;
+  }
+
+  return { activeDays, bestDay, currentStreak, maxStreak, today };
+}
+
+/** Group flat daily contributions into week columns (Sun→Sat rows). */
+export function buildHeatmapWeeks(contributions = []) {
+  if (!contributions.length) return [];
+
+  const sorted = [...contributions].sort((a, b) => a.date.localeCompare(b.date));
+  const weeks = [];
+  let week = new Array(7).fill(null);
+
+  for (const day of sorted) {
+    const dow = new Date(`${day.date}T12:00:00`).getDay(); // 0 Sun
+    week[dow] = day;
+    if (dow === 6) {
+      weeks.push(week);
+      week = new Array(7).fill(null);
+    }
+  }
+  if (week.some(Boolean)) weeks.push(week);
+  return weeks;
+}
+
+export const LEVEL_COLORS = [
+  "bg-white/[0.04]",
+  "bg-sky-300/25",
+  "bg-sky-300/45",
+  "bg-violet-300/55",
+  "bg-rose-300/70",
+];
