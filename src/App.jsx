@@ -37,9 +37,9 @@ function App() {
   if (loading && location.pathname === '/') return <Preloader />;
 
   return (
-    <div className={isAdminRoute ? '' : 'bg-black min-h-screen'}>
+    <div className={isAdminRoute ? '' : 'min-h-screen bg-[var(--bg)] text-white'}>
       {!isAdminRoute && <Navbar />}
-      <div className={!isAdminRoute ? 'pt-16' : ''}> {/* Added padding to account for fixed navbar */}
+      <div className={!isAdminRoute ? 'pt-16' : ''}>
         <Routes>
           {/* Frontend Routes */}
           <Route path="/" element={<Landing />} />

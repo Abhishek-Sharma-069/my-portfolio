@@ -11,138 +11,130 @@ import {
 } from "react-icons/fa";
 import { SiTailwindcss, SiFirebase, SiFlask, SiPytorch, SiKeras } from "react-icons/si";
 import { MdAnalytics } from "react-icons/md";
+import PageShell from "./PageShell";
 
 import codingIllustration from "../assets/images/hello.svg";
-import dataIllustration from "../assets/images/data_science.svg"; // Replace with actual illustration path
+import dataIllustration from "../assets/images/data_science.svg";
 import fullStackIllustration from "../assets/images/fullstack.svg";
 
 const About = () => {
   return (
-    <div className="w-full bg-black text-white px-2 sm:px-6 py-10 sm:py-16 flex flex-col items-center gap-16 sm:gap-24">
+    <PageShell
+      title="About"
+      subtitle="Developer and problem solver from Sultanpur — building AI tools, IoT systems, and interfaces with real-world impact."
+    >
+      <div className="flex flex-col gap-20 sm:gap-28">
+        <div className="flex flex-col items-center gap-10 md:flex-row md:gap-14">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex justify-center md:w-1/2"
+          >
+            <img
+              src={codingIllustration}
+              alt="Developer Illustration"
+              className="w-10/12 max-w-md opacity-90"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="flex flex-col gap-4 md:w-1/2"
+          >
+            <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-zinc-500">
+              Profile
+            </p>
+            <p className="text-base leading-relaxed text-zinc-300 sm:text-lg">
+              Hi, I&apos;m Abhishek Sharma — currently pursuing B.Tech in Computer Science
+              and Engineering at United Institute of Technology.
+            </p>
+            <p className="text-base leading-relaxed text-zinc-500 sm:text-lg">
+              I specialize in meaningful digital solutions, from AI-based health tools to
+              IoT-powered smart systems. Always exploring tech that lands in the real world.
+            </p>
+          </motion.div>
+        </div>
 
-      {/* About Me Section */}
-      <div className="container w-full flex flex-col md:flex-row items-center gap-8 sm:gap-12 mb-6">
-        <motion.div 
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="md:w-1/2 flex justify-center mb-6 md:mb-0"
-        >
-          <img
-            src={codingIllustration}
-            alt="Developer Illustration"
-            className="w-10/12 max-w-xs sm:max-w-md"
-          />
-        </motion.div>
-        <motion.div 
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="md:w-1/2 flex flex-col gap-4 sm:gap-6"
-        >
-          <div className="flex items-center gap-2 sm:gap-4">
-            <h2 className="text-purple-500 text-2xl sm:text-4xl font-bold">About Me</h2>
-            <div className="h-1 w-12 sm:w-20 bg-purple-500 rounded-lg"></div>
+        <div className="flex flex-col gap-16">
+          <div className="flex items-center gap-4">
+            <span className="section-rule" />
+            <h2 className="font-display text-2xl font-semibold text-white sm:text-3xl">
+              What I Do
+            </h2>
           </div>
-          <p className="text-base sm:text-lg leading-relaxed text-gray-300">
-            Hi, I’m Abhishek Sharma — a passionate developer and problem solver from
-            Sultanpur, Uttar Pradesh. I’m currently pursuing my B.Tech in Computer
-            Science and Engineering at United Institute of Technology.
-          </p>
-          <p className="text-base sm:text-lg text-gray-400">
-            I specialize in building meaningful digital solutions, ranging from AI-based
-            health tools to IoT-powered smart systems. I'm always exploring ways to
-            create tech that has real-world impact.
-          </p>
-        </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-start gap-10 md:flex-row md:gap-14"
+          >
+            <div className="flex justify-center md:w-1/2">
+              <img
+                src={dataIllustration}
+                alt="Data Science Illustration"
+                className="w-10/12 max-w-md opacity-90"
+              />
+            </div>
+            <div className="flex flex-col gap-4 md:w-1/2">
+              <h3 className="flex items-center gap-3 font-display text-xl font-semibold sm:text-2xl">
+                <MdAnalytics className="text-chroma text-2xl" /> Data Science & AI
+              </h3>
+              <div className="flex flex-wrap gap-4 text-2xl text-zinc-400">
+                <SiKeras className="transition hover:text-white" />
+                <SiPytorch className="transition hover:text-white" />
+                <FaPython className="transition hover:text-white" />
+                <FaDatabase className="transition hover:text-white" />
+              </div>
+              <ul className="space-y-2 text-base leading-relaxed text-zinc-400 sm:text-lg">
+                <li>Production-ready models for deep learning use cases</li>
+                <li>Computer Vision, NLP, and forecasting</li>
+                <li>Time-series, tuning, and visualization</li>
+              </ul>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col items-start gap-10 md:flex-row-reverse md:gap-14"
+          >
+            <div className="flex justify-center md:w-1/2">
+              <img
+                src={fullStackIllustration}
+                alt="Full Stack Dev Illustration"
+                className="w-10/12 max-w-md opacity-90"
+              />
+            </div>
+            <div className="flex flex-col gap-4 md:w-1/2">
+              <h3 className="flex items-center gap-3 font-display text-xl font-semibold sm:text-2xl">
+                <FaReact className="text-chroma text-2xl" /> Full Stack Development
+              </h3>
+              <div className="flex flex-wrap gap-4 text-2xl text-zinc-400">
+                <FaHtml5 className="transition hover:text-white" />
+                <FaCss3Alt className="transition hover:text-white" />
+                <FaJs className="transition hover:text-white" />
+                <FaReact className="transition hover:text-white" />
+                <SiTailwindcss className="transition hover:text-white" />
+                <FaNodeJs className="transition hover:text-white" />
+                <SiFirebase className="transition hover:text-white" />
+                <SiFlask className="transition hover:text-white" />
+              </div>
+              <ul className="space-y-2 text-base leading-relaxed text-zinc-400 sm:text-lg">
+                <li>Responsive frontends with React, Tailwind & Vite</li>
+                <li>Mobile with Flutter and Android / Kotlin</li>
+                <li>Backends with Node.js, Express, and Flask</li>
+              </ul>
+            </div>
+          </motion.div>
+        </div>
       </div>
-
-      {/* What I Do Section */}
-      <motion.div 
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="max-w-7xl w-full flex flex-col gap-10 sm:gap-16"
-      >
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex items-center gap-2 sm:gap-4"
-        >
-          <div className="h-1 w-12 sm:w-20 bg-purple-500 rounded-lg"></div>
-          <h2 className="text-purple-500 text-2xl sm:text-4xl font-bold">What I Do?</h2>
-        </motion.div>
-
-        {/* Data Science & AI */}
-        <motion.div 
-          initial={{ x: -100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-col md:flex-row items-start gap-8 sm:gap-12"
-        >
-          <div className="md:w-1/2 flex justify-center mb-6 md:mb-0">
-            <img
-              src={dataIllustration}
-              alt="Data Science Illustration"
-              className="w-10/12 max-w-xs sm:max-w-md"
-            />
-          </div>
-          <div className="md:w-1/2 flex flex-col gap-2 sm:gap-4">
-            <h3 className="text-xl sm:text-3xl font-semibold flex items-center gap-2">
-              <MdAnalytics className="text-purple-400" /> Data Science & AI
-            </h3>
-            <div className="flex gap-3 sm:gap-4 text-2xl sm:text-3xl text-purple-400 hover:text-red-500 transition duration-300 flex-wrap">  
-              <SiKeras />
-              <SiPytorch />
-              <FaPython />
-              <FaDatabase />
-            </div>
-            <ul className="list-disc ml-4 sm:ml-6 text-base sm:text-xl text-gray-300 leading-relaxed mt-2 sm:mt-3">
-              <li>Developing scalable production-ready models for deep learning use cases</li>
-              <li>Experience with Computer Vision, NLP, and forecasting problems</li>
-              <li>Hands-on with time-series, model tuning, and visualization tools</li>
-            </ul>
-          </div>
-        </motion.div>
-
-        {/* Full Stack Development */}
-        <motion.div 
-          initial={{ x: 100, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="flex flex-col md:flex-row-reverse items-start gap-8 sm:gap-12"
-        >
-          <div className="md:w-1/2 flex justify-center mb-6 md:mb-0">
-            <img
-              src={fullStackIllustration}
-              alt="Full Stack Dev Illustration"
-              className="w-10/12 max-w-xs sm:max-w-md"
-            />
-          </div>
-          <div className="md:w-1/2 flex flex-col gap-2 sm:gap-4">
-            <h3 className="text-xl sm:text-3xl font-semibold flex items-center gap-2">
-              <FaReact className="text-purple-400" /> Full Stack Development
-            </h3>
-            <div className="flex gap-3 sm:gap-4 text-2xl sm:text-3xl text-purple-400 flex-wrap hover:text-red-500 transition duration-300">
-              <FaHtml5 />
-              <FaCss3Alt />
-              <FaJs />
-              <FaReact />
-              <SiTailwindcss />
-              <FaNodeJs />
-              <SiFirebase />
-              <SiFlask />
-            </div>
-            <ul className="list-disc ml-4 sm:ml-6 text-base sm:text-xl text-gray-300  leading-relaxed mt-2 sm:mt-3">
-              <li>Responsive frontend development with React, Tailwind & Vite</li>
-              <li>Mobile apps using Flutter and solo Android apps with Kotlin</li>
-              <li>Backend development with Node.js, Express, and Flask</li>
-            </ul>
-          </div>
-        </motion.div>
-      </motion.div>
-    </div>
+    </PageShell>
   );
 };
 

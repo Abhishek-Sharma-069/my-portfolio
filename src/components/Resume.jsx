@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import { FaFileDownload } from "react-icons/fa";
-import axiosInstance from '../config/axios';
-
+import axiosInstance from "../config/axios";
+import PageShell from "./PageShell";
 
 const Resume = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? '');
+  const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? "");
   const loading = useSelector((state) => state.portfolio.loading);
 
   useEffect(() => {
@@ -18,94 +18,78 @@ const Resume = () => {
   }, []);
 
   return (
-    <div className="w-full container bg-black text-white px-2 sm:px-4 py-8 sm:py- flex flex-col items-center">
-      <div className="text-center max-w-4xl w-full">
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6"
-        >
-          <h2 className="text-purple-600 font-bold text-2xl sm:text-3xl md:text-4xl">
-            My Resume
-          </h2>
-          <div className="bg-purple-600 h-1 w-12 sm:w-20 md:w-40 rounded-md"></div>
-        </motion.div>
-
-        <motion.p
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-          className="text-gray-300 mb-6 sm:mb-8 text-base sm:text-lg"
-        >
-          Here's a preview of my resume. You can also download it using the
-          button below.
-        </motion.p>
-
+    <PageShell
+      title="Resume"
+      subtitle="Preview the latest résumé, or download a copy for offline reading."
+    >
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
         {loading ? (
-          <div className="w-full mb-8 p-4 bg-gray-900 border-2 border-purple-600 rounded-lg text-gray-200">
+          <div className="mb-8 w-full border border-white/10 bg-white/[0.02] p-4 text-zinc-400">
             Loading resume...
           </div>
         ) : !resumeUrl ? (
-          <div className="w-full mb-8 p-4 bg-gray-900 border-2 border-purple-600 rounded-lg text-gray-200">
+          <div className="mb-8 w-full border border-white/10 bg-white/[0.02] p-4 text-zinc-400">
             Resume not available. Please try again later.
           </div>
         ) : isMobile ? (
-          <div className="w-full mb-8 p-4 bg-gray-900 border-2 border-purple-600 rounded-lg text-gray-200">
+          <div className="mb-8 w-full border border-white/10 bg-white/[0.02] p-4 text-zinc-400">
             PDF preview is not available on mobile devices.
             <br />
             Please use the button below to download and view the resume.
           </div>
         ) : (
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.96, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-            className="w-full max-w-2xl mx-auto mb-8 flex justify-center"
+            transition={{ duration: 0.35 }}
+            className="mb-8 flex w-full max-w-xl justify-center"
           >
-            <div className="bg-white border-2 border-purple-600 rounded-lg shadow-2xl overflow-hidden" style={{ aspectRatio: '8.7/11', width: '100%', maxWidth: '540px', minHeight: '60vh', height: 'auto' }}>
+            <div
+              className="overflow-hidden border border-white/15 bg-white shadow-[0_0_60px_rgba(103,232,249,0.08)]"
+              style={{ aspectRatio: "8.7/11", width: "100%", maxWidth: "540px", minHeight: "60vh" }}
+            >
               <iframe
                 src={`${resumeUrl}#toolbar=0`}
                 title="Abhishek Sharma Resume"
-                className="w-full h-full"
-                style={{ minHeight: '60vh', height: '100%', border: '0px solid pink', padding: '0px', boxSizing: 'border-box' }}
-              ></iframe>
+                className="h-full w-full"
+                style={{ minHeight: "60vh", border: 0 }}
+              />
             </div>
           </motion.div>
         )}
 
         {resumeUrl && (
           <motion.button
-            initial={{ y: 30, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.6 }}
-            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.35, delay: 0.15 }}
+            whileHover={{ scale: 1.02 }}
+            type="button"
             onClick={async () => {
               try {
-                const response = await axiosInstance.get(resumeUrl, { responseType: 'blob' });
+                const response = await axiosInstance.get(resumeUrl, { responseType: "blob" });
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
+                const link = document.createElement("a");
                 link.href = url;
-                link.download = 'Abhishek_Sharma_Resume.pdf';
+                link.download = "Abhishek_Sharma_Resume.pdf";
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
               } catch (error) {
-                console.error('Error downloading resume:', error);
-                // Fallback to opening in new tab if download fails
-                window.open(resumeUrl, '_blank');
+                console.error("Error downloading resume:", error);
+                window.open(resumeUrl, "_blank");
               }
             }}
-            className="bg-purple-600 px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-purple-700 transition-all inline-flex items-center gap-2 text-base sm:text-lg cursor-pointer"
+            className="btn-solid inline-flex cursor-pointer items-center gap-2 px-6 py-3 font-display text-sm font-semibold"
           >
-            <FaFileDownload className="text-xl" />
+            <FaFileDownload className="text-lg" />
             Download Resume
           </motion.button>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 };
 

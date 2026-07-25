@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const activeStyle = "text-purple-500";
-  const normalStyle = "hover:text-purple-500 transition-colors";
 
   const navLinks = [
     { to: "/", label: "Home" },
@@ -18,53 +17,81 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="max-w-full h-16 bg-black flex justify-between items-center fixed top-0 w-full z-50 px-4">
-      <div className="w-[33%] bg-purple-600 h-[3px] rounded-md hidden sm:block"></div>
-      {/* Desktop Menu */}
-      <ul className="hidden sm:flex gap-8 text-white text-2xl ml-1 mr-1">
-        {navLinks.map((link) => (
-          <li key={link.to}>
-            <NavLink to={link.to} className={({ isActive }) => isActive ? activeStyle : normalStyle}>
-              {link.label}
-            </NavLink>
-          </li>
-        ))}
-      </ul>
-      {/* Hamburger Icon */}
-      <button
-        className="sm:hidden text-white text-3xl focus:outline-none"
-        onClick={() => setMenuOpen((prev) => !prev)}
-        aria-label="Toggle menu"
-      >
-        {menuOpen ? <FaTimes /> : <FaBars />}
-      </button>
-      <div className="w-[33%] bg-purple-600 h-[3px] rounded-md hidden sm:block"></div>
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="fixed top-16 left-0 w-full bg-black bg-opacity-95 flex flex-col items-center z-50 sm:hidden animate-fade-in" style={{height: 'auto', minHeight: 'calc(100vh * 0.5)'}}>
-          <ul className="flex flex-col gap-6 py-8 text-white text-2xl w-full items-center">
-            {navLinks.map((link) => (
-              <li key={link.to} className="w-full text-center">
-                <NavLink
-                  to={link.to}
-                  className={({ isActive }) => isActive ? activeStyle : normalStyle}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {/* Overlay to close menu when clicking outside */}
-      {menuOpen && (
-        <div
-          className="fixed inset-0 z-40 sm:hidden"
-          style={{ background: 'rgba(0,0,0,0.2)' }}
+    <nav className="fixed top-0 z-50 w-full border-b border-white/5 bg-black/70 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <NavLink
+          to="/"
+          className="font-display text-lg font-semibold tracking-tight text-white"
           onClick={() => setMenuOpen(false)}
-        />
-      )}
+        >
+          AS<span className="text-chroma">.</span>
+        </NavLink>
+
+        <ul className="hidden items-center gap-7 md:flex">
+          {navLinks.map((link) => (
+            <li key={link.to}>
+              <NavLink
+                to={link.to}
+                className={({ isActive }) =>
+                  `font-mono text-[11px] uppercase tracking-[0.22em] transition-colors duration-300 ${
+                    isActive ? "text-white" : "text-zinc-500 hover:text-zinc-200"
+                  }`
+                }
+              >
+                {({ isActive }) => (
+                  <span className="relative">
+                    {link.label}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute -bottom-1 left-0 h-px w-full bg-white"
+                      />
+                    )}
+                  </span>
+                )}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+
+        <button
+          type="button"
+          className="text-white md:hidden"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          {menuOpen ? <FaTimes className="text-2xl" /> : <FaBars className="text-2xl" />}
+        </button>
+      </div>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="border-t border-white/5 bg-black/95 md:hidden"
+          >
+            <ul className="flex flex-col gap-1 px-4 py-6">
+              {navLinks.map((link) => (
+                <li key={link.to}>
+                  <NavLink
+                    to={link.to}
+                    onClick={() => setMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `block py-3 font-display text-2xl ${
+                        isActive ? "text-white" : "text-zinc-500"
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

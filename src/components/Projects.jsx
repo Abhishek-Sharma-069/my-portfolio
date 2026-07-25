@@ -2,25 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { FaArrowRight } from "react-icons/fa";
 import { motion } from "framer-motion";
-
+import PageShell from "./PageShell";
 import project_illustration from "../assets/images/mindmap.svg";
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5, ease: "easeOut" },
-  },
-};
 
 const Projects = () => {
   const projects = useSelector((state) => state.portfolio.data?.projects ?? []);
@@ -28,119 +11,80 @@ const Projects = () => {
 
   if (loading && !projects.length) {
     return (
-      <div className="w-full text-white bg-black py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500" />
-      </div>
+      <PageShell title="Projects">
+        <div className="flex justify-center py-20">
+          <div className="h-10 w-10 animate-spin rounded-full border border-white/20 border-t-white" />
+        </div>
+      </PageShell>
     );
   }
 
   return (
-    <div className="w-full text-white bg-black py-8 sm:py-12 lg:py-16">
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="container mx-auto px-2 sm:px-6 flex flex-col gap-8 lg:gap-12"
-      >
-        {/* Upper Side */}
-        <motion.div
-          variants={itemVariants}
-          className="w-full flex flex-col items-center lg:items-start text-center lg:text-left"
-        >
-          {/* Left side */}
-          <motion.div
-                    initial={{ y: -20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                    className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6"
-                  >
-                    <h2 className="text-purple-600 font-bold text-2xl sm:text-3xl md:text-4xl">
-                      My Projects
-                    </h2>
-                    <div className="bg-purple-600 h-1 w-12 sm:w-20 md:w-40 rounded-md"></div>
-                  </motion.div>
-          {/* Left side */}
-          <motion.div
-            variants={itemVariants}
-            className="w-full max-w-8xl flex flex-col lg:flex-row items-center gap-6 sm:gap-12 mb-3"
+    <PageShell
+      title="Projects"
+      subtitle="Full-stack builds across AI, healthcare, IoT, and cloud — shipped with modern web stacks and real users in mind."
+    >
+      <div className="mb-12 flex flex-col items-center gap-8 lg:flex-row lg:items-start">
+        <p className="flex-1 text-base leading-relaxed text-zinc-400 sm:text-lg">
+          From Android and IoT systems to React web apps — most experienced in AI-forward
+          products with Firebase and cloud deployment in the loop.
+        </p>
+        <img
+          src={project_illustration}
+          alt="Projects Illustration"
+          className="w-full max-w-xs opacity-90 lg:max-w-sm"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {projects?.map((project, index) => (
+          <motion.article
+            key={project._id}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.4, delay: index * 0.05 }}
+            className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.02]"
           >
-            <motion.p
-              variants={itemVariants}
-              className="w-full text-base leading-relaxed sm:text-lg text-gray-300 mb-4 sm:mb-6 px-2 sm:px-0"
-            >
-              My projects leverage a diverse stack of modern technologies, from
-              Android and IoT systems to React-based web applications. I’m most
-              experienced in building full-stack applications with a focus on
-              AI, healthcare, and smart systems, often integrating cloud
-              services like Firebase for real-time data and deployment.
-            </motion.p>
-
-            <motion.img
-              variants={itemVariants}
-              whileHover={{ scale: 1.05 }}
-              src={project_illustration}
-              alt="Projects Illustration"
-              className="w-full max-w-xs sm:max-w-xs lg:max-w-md my-4 sm:my-6 rounded-lg"
-            />
-          </motion.div>
-        </motion.div>
-
-        {/* Project Cards Grid */}
-        <motion.div
-          variants={containerVariants}
-          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-        >
-          {projects?.map((project, index) => (
-            <motion.div
-              key={project._id} // Use project._id as key
-              variants={itemVariants}
-              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-              className="bg-gray-800 border border-purple-600 rounded-lg overflow-hidden shadow-lg flex flex-col max-w-[320px] mx-auto w-full"
-            >
+            <div className="relative overflow-hidden">
               <img
-                src={project.image} // Use project.image from fetched data
+                src={project.image}
                 alt={project.title}
-                className="w-full h-40 object-cover"
+                className="h-44 w-full object-cover grayscale transition duration-500 group-hover:grayscale-0 group-hover:scale-105"
               />
-              <div className="p-4 flex flex-col flex-grow">
-                <h3 className="text-lg font-bold text-purple-600 mb-2">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-gray-300 mb-3 flex-grow">
-                  {project.description}
-                </p>
-                <a
-                  href={project.buttonLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-purple-500 py-1.5 px-3 rounded-md hover:bg-red-500 transition duration-300 text-center text-sm w-full sm:w-auto"
-                >
-                  {project.buttonText}
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+            </div>
+            <div className="flex flex-1 flex-col p-5">
+              <h3 className="font-display text-lg font-semibold text-white">{project.title}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-zinc-500">{project.description}</p>
+              <a
+                href={project.buttonLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost mt-5 inline-flex w-fit items-center gap-2 px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em]"
+              >
+                {project.buttonText}
+                <FaArrowRight className="text-xs" />
+              </a>
+            </div>
+          </motion.article>
+        ))}
+      </div>
 
-        {/* See All Projects Button */}
-        <motion.div
-          variants={itemVariants}
-          className="w-full flex justify-center mt-8"
+      <div className="mt-12 flex justify-center">
+        <motion.a
+          href="https://github.com/Abhishek-Sharma-069?tab=repositories"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="btn-solid inline-flex items-center gap-2 px-8 py-3 font-display text-sm font-semibold"
         >
-          <motion.a
-            href="https://github.com/Abhishek-Sharma-069?tab=repositories"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-purple-600 text-white px-8 py-3 rounded-md hover:bg-purple-700 transition-colors duration-300 text-lg font-semibold flex items-center gap-2"
-          >
-            See All Projects
-            <FaArrowRight />
-          </motion.a>
-        </motion.div>
-      </motion.div>
-    </div>
+          See All Projects
+          <FaArrowRight />
+        </motion.a>
+      </div>
+    </PageShell>
   );
 };
 

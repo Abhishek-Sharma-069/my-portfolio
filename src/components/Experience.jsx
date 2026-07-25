@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { GrDown } from "react-icons/gr";
+import PageShell from "./PageShell";
 import experience from "../assets/images/experience.svg";
 
 const Experience = () => {
@@ -14,126 +15,79 @@ const Experience = () => {
   };
 
   return (
-    <div className="w-full bg-black text-white py-10 px-2 sm:py-14 sm:px-6 flex flex-col items-center">
-      <div className="container w-full">
-        {/* Section Heading */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="flex items-center gap-2 sm:gap-3 mb-3"
-        >
-          <h2 className="text-2xl sm:text-4xl font-bold text-purple-500">Experience</h2>
-          <div className="h-1 w-12 sm:w-24 bg-purple-500 rounded-md"></div>
-        </motion.div>
-
-        {/* Intro Text and Illustration */}
-        <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6 mb-3">
-          <motion.p
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="text-gray-300 text-base sm:text-xl leading-relaxed max-w-2xl mb-4 lg:mb-0"
-          >
-            Work, Internship and Volunteership — I’ve worked on real-world
-            projects as an Application Developer and Frontend Designer,
-            particularly in the healthcare and IoT domains. I’ve also
-            contributed to impactful college-level hackathons and served as a
-            Campus Ambassador at GeeksforGeeks. Beyond development, I enjoy
-            participating in tech events and collaborating with open-source
-            communities to drive meaningful change.
-          </motion.p>
-          <motion.img
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-            src={experience}
-            alt="experience"
-            className="w-56 sm:w-80 lg:w-96 object-contain"
-          />
-        </div>
-
-        {/* Loading State */}
-        {loading && (
-          <div className="text-center py-8">
-            <div className="text-purple-500 text-lg">Loading experience data...</div>
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!loading && (!experienceData.sections || experienceData.sections.length === 0) && (
-          <div className="text-center py-8">
-            <div className="text-gray-400 text-lg">No experience data available</div>
-          </div>
-        )}
-
-        {/* Accordion Timeline */}
-        {!loading && experienceData?.sections && experienceData.sections.length > 0 && experienceData?.sections?.map((section, index) => (
-          <motion.div
-            key={section.type}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-            className="mb-3"
-          >
-            {/* Accordion Header */}
-            <div
-              onClick={() => toggleAccordion(index)}
-              className="flex justify-between items-center bg-[#1a1a1a] border border-purple-500 rounded-md px-6 py-4 cursor-pointer hover:bg-purple-900/20 transition-all"
-            >
-              <h3 className="text-xl font-semibold text-white">
-                {section.type}
-              </h3>
-              <GrDown
-                className={`text-white transition-transform duration-300 ${
-                  activeAccordion === index ? "rotate-180" : ""
-                }`}
-              />
-            </div>
-
-            {/* Accordion Content */}
-            <AnimatePresence mode="wait">
-              {activeAccordion === index && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="relative mt-8 ml-4 pl-6"
-                >
-                  {/* Timeline Vertical Line */}
-                  <div className="absolute left-4 top-0 h-full w-1 bg-purple-500 rounded"></div>
-
-                  {/* Timeline Items */}
-                  <div className="flex flex-col gap-10">
-                    {section.items.map((item, idx) => (
-                      <div key={idx} className="relative flex gap-6">
-                        {/* Timeline Dot */}
-                        <div className="absolute left-[-0.7rem] top-2 w-4 h-4 bg-purple-500 border-2 border-white rounded-full"></div>
-
-                        {/* Experience Card */}
-                        <div className="bg-[#121212] border border-purple-500 rounded-lg p-4 w-full shadow-md">
-                          <h4 className="text-purple-400 font-bold text-lg">
-                            {item.company || item.organization}
-                          </h4>
-                          <p className="text-white font-medium">{item.role}</p>
-                          <p className="text-gray-400 text-sm italic">
-                            {item.duration}
-                          </p>
-                          <p className="text-gray-300 mt-2 text-sm leading-relaxed">
-                            {item.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        ))}
+    <PageShell
+      title="Experience"
+      subtitle="Work, internships, and volunteership — shipping products, mentoring communities, and building in public."
+    >
+      <div className="mb-10 flex flex-col items-center gap-8 lg:flex-row">
+        <p className="max-w-2xl text-base leading-relaxed text-zinc-400 sm:text-lg">
+          Application development and frontend design across healthcare and IoT,
+          campus ambassador work at GeeksforGeeks, and open-source collaboration.
+        </p>
+        <img src={experience} alt="experience" className="w-56 object-contain opacity-90 sm:w-80" />
       </div>
-    </div>
+
+      {loading && (
+        <div className="py-8 text-center font-mono text-sm text-zinc-500">Loading experience data...</div>
+      )}
+
+      {!loading && (!experienceData.sections || experienceData.sections.length === 0) && (
+        <div className="py-8 text-center text-zinc-500">No experience data available</div>
+      )}
+
+      {!loading && experienceData?.sections?.map((section, index) => (
+        <motion.div
+          key={section.type}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.08 }}
+          className="mb-3"
+        >
+          <button
+            type="button"
+            onClick={() => toggleAccordion(index)}
+            className="flex w-full items-center justify-between border border-white/10 bg-white/[0.02] px-5 py-4 text-left transition hover:border-white/25 hover:bg-white/[0.04]"
+          >
+            <h3 className="font-display text-lg font-semibold text-white">{section.type}</h3>
+            <GrDown
+              className={`text-zinc-400 transition-transform duration-300 ${
+                activeAccordion === index ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          <AnimatePresence mode="wait">
+            {activeAccordion === index && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="relative mt-6 ml-2 overflow-hidden pl-6"
+              >
+                <div className="absolute left-4 top-0 h-full w-px bg-gradient-to-b from-cyan-300/60 via-violet-300/40 to-transparent" />
+
+                <div className="flex flex-col gap-8">
+                  {section.items.map((item, idx) => (
+                    <div key={idx} className="relative flex gap-6">
+                      <div className="absolute left-[-0.65rem] top-2 h-3 w-3 rounded-full border border-white bg-black" />
+                      <div className="w-full border border-white/10 bg-black/40 p-4">
+                        <h4 className="font-display text-base font-semibold text-white">
+                          {item.company || item.organization}
+                        </h4>
+                        <p className="mt-1 text-sm text-zinc-300">{item.role}</p>
+                        <p className="font-mono text-xs italic text-zinc-600">{item.duration}</p>
+                        <p className="mt-2 text-sm leading-relaxed text-zinc-500">{item.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      ))}
+    </PageShell>
   );
 };
 
