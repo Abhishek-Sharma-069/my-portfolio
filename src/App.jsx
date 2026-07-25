@@ -1,4 +1,3 @@
-import './App.css';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar, Landing, About, Skills, Projects, Contact, Experience, Resume } from './index.js';
 import Preloader from './components/Preloader.jsx';
