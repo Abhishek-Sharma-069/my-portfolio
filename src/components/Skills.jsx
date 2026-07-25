@@ -5,22 +5,71 @@ import {
   FaJava, FaPhp, FaJsSquare, FaPython, FaReact,
   FaNodeJs, FaAndroid, FaGitAlt, FaDocker, FaHtml5,
   FaCss3Alt, FaBootstrap, FaSass, FaLess, FaAws,
-  FaGoogle, FaMicrosoft, FaUbuntu, FaLinux
+  FaGoogle, FaMicrosoft, FaUbuntu, FaLinux, FaFlask, FaGithub
 } from "react-icons/fa";
 import {
   SiMysql, SiC, SiCplusplus, SiMongodb, SiNextdotjs,
-  SiTypescript, SiJavascript, SiVuedotjs, SiAngular, SiPostgresql
+  SiTypescript, SiJavascript, SiVuedotjs, SiAngular, SiPostgresql,
+  SiRedis, SiSpring, SiSpringboot, SiSpringsecurity, SiHibernate,
+  SiApachemaven, SiGradle, SiJunit5, SiApachekafka, SiRabbitmq,
+  SiApachetomcat, SiPython, SiDjango, SiFlask, SiFastapi, SiPandas,
+  SiNumpy, SiScipy, SiPytorch, SiTensorflow, SiKeras, SiScikitlearn,
+  SiJupyter, SiAnaconda, SiStreamlit, SiCelery, SiPoetry, SiOpenai,
+  SiHuggingface, SiLangchain, SiDotnet, SiBlazor, SiNuget, SiKubernetes,
+  SiDocker, SiJenkins, SiPostman, SiSwagger, SiGraphql
 } from "react-icons/si";
+import { DiRedis, DiJava, DiPython, DiDotnet, DiVisualstudio } from "react-icons/di";
+import { TbBrandCSharp, TbBrandAzure, TbBrandXamarin, TbBrandVisualStudio } from "react-icons/tb";
+import { BiLogoSpringBoot } from "react-icons/bi";
 
 import { skillsData } from "../data/indexData.js";
 
+// react-icons has no LangGraph icon yet — simple node-graph stand-in
+const SiLanggraph = ({ className }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <circle cx="5" cy="12" r="2.5" />
+    <circle cx="12" cy="5" r="2.5" />
+    <circle cx="19" cy="12" r="2.5" />
+    <circle cx="12" cy="19" r="2.5" />
+    <path
+      d="M7.1 10.7L9.9 7.3M14.1 7.3L16.9 10.7M16.9 13.3L14.1 16.7M9.9 16.7L7.1 13.3"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      fill="none"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const iconMap = {
+  // Existing
   FaJava, FaPhp, FaJsSquare, FaPython, FaReact,
   FaNodeJs, FaAndroid, FaGitAlt, FaDocker, FaHtml5,
   FaCss3Alt, FaBootstrap, FaSass, FaLess, FaAws,
-  FaGoogle, FaMicrosoft, FaUbuntu, FaLinux,
+  FaGoogle, FaMicrosoft, FaUbuntu, FaLinux, FaFlask, FaGithub,
   SiMysql, SiC, SiCplusplus, SiMongodb, SiNextdotjs,
-  SiTypescript, SiJavascript, SiVuedotjs, SiAngular, SiPostgresql
+  SiTypescript, SiJavascript, SiVuedotjs, SiAngular, SiPostgresql,
+  SiRedis, DiRedis,
+  // Java
+  DiJava, SiSpring, SiSpringboot, SiSpringsecurity, SiHibernate,
+  SiApachemaven, SiGradle, SiJunit5, SiApachekafka, SiRabbitmq,
+  SiApachetomcat, BiLogoSpringBoot,
+  // Python
+  DiPython, SiPython, SiDjango, SiFlask, SiFastapi, SiPandas,
+  SiNumpy, SiScipy, SiPytorch, SiTensorflow, SiKeras, SiScikitlearn,
+  SiJupyter, SiAnaconda, SiStreamlit, SiCelery, SiPoetry, SiOpenai,
+  SiHuggingface, SiLangchain, SiLanggraph,
+  // .NET
+  SiDotnet, DiDotnet, TbBrandCSharp, SiBlazor, SiNuget,
+  DiVisualstudio, TbBrandVisualStudio, TbBrandAzure, TbBrandXamarin,
+  // Related tooling often used with these stacks
+  SiKubernetes, SiDocker, SiJenkins, SiPostman, SiSwagger, SiGraphql
 };
 
 const Skills = () => {

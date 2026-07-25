@@ -22,6 +22,14 @@ const defaultSkillsShape = {
     "DevOps & Tools": []
 };
 
+const cloneSkills = (source = {}) => ({
+    "General": [...(Array.isArray(source.General) ? source.General : [])],
+    "Web Development": [...(Array.isArray(source["Web Development"]) ? source["Web Development"] : [])],
+    "Mobile Development": [...(Array.isArray(source["Mobile Development"]) ? source["Mobile Development"] : [])],
+    "Databases": [...(Array.isArray(source.Databases) ? source.Databases : [])],
+    "DevOps & Tools": [...(Array.isArray(source["DevOps & Tools"]) ? source["DevOps & Tools"] : [])]
+});
+
 const SkillsManager = () => {
     const dispatch = useDispatch();
     const portfolioSkills = useSelector((state) => state.portfolio.data?.skills);
@@ -45,12 +53,16 @@ const SkillsManager = () => {
 
     // Common icon examples for reference
     const iconExamples = [
-        'FaJava', 'FaPhp', 'FaJsSquare', 'FaPython', 'FaReact',
-        'FaNodeJs', 'FaAndroid', 'FaGitAlt', 'FaDocker',
-        'SiMysql', 'SiC', 'SiCplusplus', 'SiMongodb', 'SiNextdotjs',
-        'FaHtml5', 'FaCss3Alt', 'FaBootstrap', 'FaSass', 'FaLess',
-        'SiTypescript', 'SiJavascript', 'SiVuedotjs', 'SiAngular',
-        'FaAws', 'FaGoogle', 'FaMicrosoft', 'FaUbuntu', 'FaLinux'
+        // Java
+        'FaJava', 'DiJava', 'SiSpring', 'SiSpringboot', 'SiHibernate',
+        'SiApachemaven', 'SiGradle', 'SiJunit5', 'SiApachekafka',
+        // Python / AI
+        'FaPython', 'SiDjango', 'SiFlask', 'SiFastapi', 'SiPandas',
+        'SiNumpy', 'SiPytorch', 'SiTensorflow', 'SiLangchain', 'SiLanggraph',
+        // .NET
+        'SiDotnet', 'TbBrandCSharp', 'SiBlazor', 'SiNuget', 'TbBrandAzure',
+        // Web / tools
+        'FaReact', 'SiNextdotjs', 'FaDocker', 'SiRedis', 'DiRedis'
     ];
 
     // Common color examples for reference
@@ -66,13 +78,8 @@ const SkillsManager = () => {
 
     useEffect(() => {
         if (!portfolioSkills) return;
-        setSkills({
-            "General": Array.isArray(portfolioSkills.General) ? portfolioSkills.General : [],
-            "Web Development": Array.isArray(portfolioSkills["Web Development"]) ? portfolioSkills["Web Development"] : [],
-            "Mobile Development": Array.isArray(portfolioSkills["Mobile Development"]) ? portfolioSkills["Mobile Development"] : [],
-            "Databases": Array.isArray(portfolioSkills.Databases) ? portfolioSkills.Databases : [],
-            "DevOps & Tools": Array.isArray(portfolioSkills["DevOps & Tools"]) ? portfolioSkills["DevOps & Tools"] : []
-        });
+        // Copy arrays so we never mutate frozen Redux state
+        setSkills(cloneSkills(portfolioSkills));
     }, [portfolioSkills]);
 
     const handleInputChange = (e) => {
@@ -84,7 +91,7 @@ const SkillsManager = () => {
         const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
 
         try {
-            const updatedSkills = { ...skills };
+            const updatedSkills = cloneSkills(skills);
             
             if (editingSkill) {
                 // Update existing skill
@@ -133,7 +140,7 @@ const SkillsManager = () => {
             const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
             
             try {
-                const updatedSkills = { ...skills };
+                const updatedSkills = cloneSkills(skills);
                 updatedSkills[category].splice(index, 1);
                 
                 await axiosInstance.put('/portfolio-data', 
@@ -257,7 +264,7 @@ const SkillsManager = () => {
                                 required
                             />
                             <p className="text-xs text-gray-400 mt-1">
-                                Enter React icon name (from react-icons/fa or react-icons/si)
+                                Enter React icon name (from react-icons/fa, si, or di — must be added to Skills.jsx iconMap)
                             </p>
                             <div className="mt-2">
                                 <p className="text-xs text-gray-500 mb-1">Common examples:</p>
