@@ -19,6 +19,7 @@ const Resume = () => {
 
   return (
     <PageShell
+      index="06 / Resume"
       title="Resume"
       subtitle="Preview the latest résumé, or download a copy for offline reading."
     >

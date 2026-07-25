@@ -12,6 +12,8 @@ import {
 import { SiTailwindcss, SiFirebase, SiFlask, SiPytorch, SiKeras } from "react-icons/si";
 import { MdAnalytics } from "react-icons/md";
 import PageShell from "./PageShell";
+import GitHubPulse from "./GitHubPulse";
+import { githubProfile } from "../data/githubData";
 
 import codingIllustration from "../assets/images/hello.svg";
 import dataIllustration from "../assets/images/data_science.svg";
@@ -20,8 +22,9 @@ import fullStackIllustration from "../assets/images/fullstack.svg";
 const About = () => {
   return (
     <PageShell
+      index="01 / About"
       title="About"
-      subtitle="Developer and problem solver from Sultanpur — building AI tools, IoT systems, and interfaces with real-world impact."
+      subtitle={githubProfile.tagline}
     >
       <div className="flex flex-col gap-20 sm:gap-28">
         <div className="flex flex-col items-center gap-10 md:flex-row md:gap-14">
@@ -46,18 +49,38 @@ const About = () => {
             className="flex flex-col gap-4 md:w-1/2"
           >
             <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-zinc-500">
-              Profile
+              Profile · {githubProfile.handle}
             </p>
             <p className="text-base leading-relaxed text-zinc-300 sm:text-lg">
-              Hi, I&apos;m Abhishek Sharma — currently pursuing B.Tech in Computer Science
-              and Engineering at United Institute of Technology.
+              Hi, I&apos;m Abhishek Sharma — B.Tech CSE at United Institute of Technology
+              (AKTU, 2022–2026). Campus Ambassador at GeeksforGeeks and GSSoC&apos;24 Extended
+              contributor.
             </p>
             <p className="text-base leading-relaxed text-zinc-500 sm:text-lg">
-              I specialize in meaningful digital solutions, from AI-based health tools to
-              IoT-powered smart systems. Always exploring tech that lands in the real world.
+              I build meaningful digital solutions — AI health tools, IoT systems, and
+              full-stack products. Reach me at{" "}
+              <a
+                href={`mailto:${githubProfile.email}`}
+                className="text-zinc-300 underline decoration-white/20 underline-offset-4 hover:text-white"
+              >
+                {githubProfile.email}
+              </a>
+              .
             </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {githubProfile.identity.code.slice(0, 6).map((lang) => (
+                <span
+                  key={lang}
+                  className="border border-white/10 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-zinc-500"
+                >
+                  {lang}
+                </span>
+              ))}
+            </div>
           </motion.div>
         </div>
+
+        <GitHubPulse />
 
         <div className="flex flex-col gap-16">
           <div className="flex items-center gap-4">

@@ -21,6 +21,7 @@ const Projects = () => {
 
   return (
     <PageShell
+      index="03 / Projects"
       title="Projects"
       subtitle="Full-stack builds across AI, healthcare, IoT, and cloud — shipped with modern web stacks and real users in mind."
     >

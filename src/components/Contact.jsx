@@ -63,7 +63,7 @@ const Contact = () => {
   };
 
   return (
-    <PageShell title={contactData.title} subtitle={contactData.description}>
+    <PageShell index="07 / Contact" title={contactData.title} subtitle={contactData.description}>
       <div className="flex flex-col gap-10 lg:flex-row lg:gap-14">
         <motion.div
           initial={{ x: -30, opacity: 0 }}

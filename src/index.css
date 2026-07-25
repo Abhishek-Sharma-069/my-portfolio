@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --color-void: #050505;
+  --color-void: #030303;
   --color-ink: #0a0a0a;
   --color-fog: #a1a1aa;
   --color-mist: #71717a;
@@ -14,16 +14,16 @@
 }
 
 :root {
-  --bg: #050505;
+  --bg: #030303;
   --fg: #fafafa;
   --muted: #a1a1aa;
   --line: rgba(255, 255, 255, 0.08);
-  --accent-a: #67e8f9;
+  --accent-a: #7dd3fc;
   --accent-b: #c4b5fd;
-  --accent-c: #fda4af;
-  --accent-d: #fde68a;
+  --accent-c: #fb7185;
+  --accent-d: #fbbf24;
   --chroma: linear-gradient(
-    120deg,
+    115deg,
     var(--accent-a),
     var(--accent-b),
     var(--accent-c),
@@ -34,6 +34,11 @@
 
 * {
   box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(125, 211, 252, 0.35);
+  color: #fff;
 }
 
 html {
@@ -66,54 +71,53 @@ h3,
   height: 0;
 }
 
-/* Soft grain over dark surfaces */
 .noise-overlay::before {
   content: "";
   pointer-events: none;
   position: absolute;
   inset: 0;
-  opacity: 0.04;
+  opacity: 0.045;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   z-index: 1;
 }
 
 .text-chroma {
   background: var(--chroma);
-  background-size: 300% 300%;
+  background-size: 280% 280%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: chroma-shift 8s ease infinite;
-}
-
-.border-chroma {
-  border-image: var(--chroma) 1;
+  animation: chroma-shift 7s ease infinite;
 }
 
 .glow-chroma {
-  box-shadow: 0 0 40px rgba(103, 232, 249, 0.12), 0 0 80px rgba(196, 181, 253, 0.08);
+  box-shadow:
+    0 0 40px rgba(125, 211, 252, 0.14),
+    0 0 90px rgba(196, 181, 253, 0.08);
 }
 
 .btn-ghost {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   color: var(--fg);
   background: transparent;
-  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease;
 }
 
 .btn-ghost:hover {
   border-color: rgba(255, 255, 255, 0.55);
   background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
 }
 
 .btn-solid {
   background: var(--fg);
   color: var(--bg);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
 .btn-solid:hover {
-  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.12);
 }
 
 .section-rule {
@@ -126,17 +130,27 @@ h3,
 
 .page-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 64px 64px;
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 72px 72px;
   background-position: center top;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black 15%, transparent 72%);
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marquee 28s linear infinite;
 }
 
 @keyframes chroma-shift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 @keyframes pulse-soft {

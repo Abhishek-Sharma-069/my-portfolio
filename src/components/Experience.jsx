@@ -16,6 +16,7 @@ const Experience = () => {
 
   return (
     <PageShell
+      index="05 / Experience"
       title="Experience"
       subtitle="Work, internships, and volunteership — shipping products, mentoring communities, and building in public."
     >

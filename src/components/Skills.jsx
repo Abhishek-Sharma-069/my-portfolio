@@ -91,6 +91,7 @@ const Skills = () => {
 
   return (
     <PageShell
+      index="04 / Skills"
       title="Skills"
       subtitle="A living stack — languages, frameworks, and tools shaped by shipping real products."
     >
