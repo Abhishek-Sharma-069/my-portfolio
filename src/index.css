@@ -1,6 +1,348 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: "Unbounded", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ── Theme palettes ───────────────────────────────────────────── */
+
+:root,
+[data-theme="void"] {
+  --bg: #030303;
+  --surface: rgba(255, 255, 255, 0.02);
+  --fg: #fafafa;
+  --muted: #a1a1aa;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent-a: #7dd3fc;
+  --accent-b: #c4b5fd;
+  --accent-c: #fb7185;
+  --accent-d: #fbbf24;
+}
+
+[data-theme="ember"] {
+  --bg: #0a0503;
+  --surface: rgba(255, 255, 255, 0.025);
+  --fg: #fdf6f0;
+  --muted: #b0a099;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent-a: #fbbf24;
+  --accent-b: #fb923c;
+  --accent-c: #f87171;
+  --accent-d: #fde68a;
+}
+
+[data-theme="forest"] {
+  --bg: #020705;
+  --surface: rgba(255, 255, 255, 0.025);
+  --fg: #f2fbf6;
+  --muted: #9bb0a5;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent-a: #6ee7b7;
+  --accent-b: #a3e635;
+  --accent-c: #2dd4bf;
+  --accent-d: #fef08a;
+}
+
+[data-theme="midnight"] {
+  --bg: #02040c;
+  --surface: rgba(255, 255, 255, 0.025);
+  --fg: #f1f5ff;
+  --muted: #98a3c0;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent-a: #60a5fa;
+  --accent-b: #818cf8;
+  --accent-c: #22d3ee;
+  --accent-d: #c7d2fe;
+}
+
+[data-theme="violet"] {
+  --bg: #07030c;
+  --surface: rgba(255, 255, 255, 0.025);
+  --fg: #f9f5ff;
+  --muted: #a99bb8;
+  --line: rgba(255, 255, 255, 0.08);
+  --accent-a: #c084fc;
+  --accent-b: #e879f9;
+  --accent-c: #a78bfa;
+  --accent-d: #f0abfc;
+}
+
+:root {
+  --chroma: linear-gradient(
+    115deg,
+    var(--accent-a),
+    var(--accent-b),
+    var(--accent-c),
+    var(--accent-d),
+    var(--accent-a)
+  );
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent-a) 35%, transparent);
+  color: #fff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom dual-circle cursor (desktop fine pointers only) */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
 ::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
+}
+
+.noise-overlay::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.text-chroma {
+  background: var(--chroma);
+  background-size: 280% 280%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: chroma-shift 7s ease infinite;
+}
+
+/* Outlined display text — follows the active theme accent */
+.text-outline {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent-a);
+  paint-order: stroke fill;
+  transition: -webkit-text-stroke-color 0.4s ease;
+}
+
+@media (min-width: 640px) {
+  .text-outline {
+    -webkit-text-stroke-width: 2px;
+  }
+}
+
+.text-outline-b {
+  -webkit-text-stroke-color: var(--accent-b);
+}
+
+.glow-chroma {
+  box-shadow:
+    0 0 40px color-mix(in srgb, var(--accent-a) 14%, transparent),
+    0 0 90px color-mix(in srgb, var(--accent-b) 8%, transparent);
+}
+
+.btn-ghost {
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--fg);
+  background: transparent;
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.btn-ghost:hover {
+  border-color: color-mix(in srgb, var(--accent-a) 55%, rgba(255, 255, 255, 0.45));
+  background: color-mix(in srgb, var(--accent-a) 6%, transparent);
+  transform: translateY(-1px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-a) 12%, transparent);
+}
+
+.btn-solid {
+  background: var(--fg);
+  color: var(--bg);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.btn-solid:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 12px 40px rgba(255, 255, 255, 0.12),
+    0 0 28px color-mix(in srgb, var(--accent-a) 18%, transparent);
+}
+
+.section-rule {
+  height: 1px;
+  width: 4rem;
+  background: var(--chroma);
+  background-size: 200% 100%;
+  animation: chroma-shift 6s linear infinite;
+}
+
+/* Soft atmospheric blobs — tint with active theme */
+.page-blob-a {
+  background: color-mix(in srgb, var(--accent-a) 7%, transparent);
+  transition: background 0.4s ease;
+}
+
+.page-blob-b {
+  background: color-mix(in srgb, var(--accent-c) 6%, transparent);
+  transition: background 0.4s ease;
+}
+
+/* Focus / interactive borders that follow theme */
+.accent-focus:focus,
+.accent-field:focus {
+  border-color: color-mix(in srgb, var(--accent-a) 55%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-a) 18%, transparent);
+}
+
+.accent-field {
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.accent-field:hover:not(:focus) {
+  border-color: color-mix(in srgb, var(--accent-a) 28%, rgba(255, 255, 255, 0.18));
+  background: color-mix(in srgb, var(--accent-a) 3%, rgba(0, 0, 0, 0.4));
+}
+
+.accent-hover-border {
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.accent-hover-border:hover {
+  border-color: color-mix(in srgb, var(--accent-a) 40%, transparent);
+  background: color-mix(in srgb, var(--accent-a) 4%, rgba(255, 255, 255, 0.02));
+}
+
+.accent-card {
+  transition: border-color 0.35s ease, background 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.accent-card:hover {
+  border-color: color-mix(in srgb, var(--accent-a) 38%, transparent);
+  background: color-mix(in srgb, var(--accent-a) 5%, rgba(255, 255, 255, 0.03));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--accent-a) 8%, transparent);
+}
+
+.accent-link {
+  transition: color 0.3s ease;
+}
+
+.accent-link:hover {
+  color: var(--accent-a);
+}
+
+.accent-chip {
+  transition: border-color 0.3s ease, color 0.3s ease, background 0.3s ease;
+}
+
+.accent-chip:hover {
+  border-color: color-mix(in srgb, var(--accent-a) 35%, transparent);
+  color: color-mix(in srgb, var(--accent-a) 85%, white);
+  background: color-mix(in srgb, var(--accent-a) 6%, transparent);
+}
+
+.page-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 72px 72px;
+  background-position: center top;
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 0%, black 15%, transparent 72%);
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+/* Contribution heatmap levels — themed */
+.hm-0 { background: rgba(255, 255, 255, 0.05); }
+.hm-1 { background: color-mix(in srgb, var(--accent-a) 28%, transparent); }
+.hm-2 { background: color-mix(in srgb, var(--accent-a) 55%, transparent); }
+.hm-3 { background: color-mix(in srgb, var(--accent-b) 70%, transparent); }
+.hm-4 { background: color-mix(in srgb, var(--accent-c) 85%, transparent); }
+
+@keyframes chroma-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes login-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(18px, -22px) scale(1.05); }
+}
+
+@keyframes login-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-16px, 20px) scale(1.06); }
+}
+
+.login-blob-a {
+  animation: login-drift-a 14s ease-in-out infinite;
+}
+
+.login-blob-b {
+  animation: login-drift-b 18s ease-in-out infinite;
+}
+
+.login-panel {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent-a) 4%, transparent),
+    0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.login-panel:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent-a) 10%, transparent),
+    0 28px 70px rgba(0, 0, 0, 0.4),
+    0 0 40px color-mix(in srgb, var(--accent-a) 6%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-blob-a,
+  .login-blob-b {
+    animation: none;
+  }
 }

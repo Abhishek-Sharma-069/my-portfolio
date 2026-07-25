@@ -1,211 +1,252 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axiosInstance from '../config/axios';
-import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axiosInstance from "../config/axios";
+import { fetchPortfolioData } from "../redux/slices/portfolioSlice";
 import { motion } from "framer-motion";
-import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
-
-const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import AdminShell, { adminInputClass, adminLabelClass, adminPanelClass, adminListItemClass } from "./AdminShell";
 
 const ProjectsManager = () => {
-    const dispatch = useDispatch();
-    const projects = useSelector((state) => state.portfolio.data?.projects ?? []);
-    const [formData, setFormData] = useState({ title: '', description: '', buttonText: '', buttonLink: '', image: null, currentImage: '' });
-    const [editingProject, setEditingProject] = useState(null);
-    const [showForm, setShowForm] = useState(false); // State to control form visibility
+  const dispatch = useDispatch();
+  const projects = useSelector((state) => state.portfolio.data?.projects ?? []);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    buttonText: "",
+    buttonLink: "",
+    image: null,
+    currentImage: "",
+  });
+  const [editingProject, setEditingProject] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
-    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
+  const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
-    const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, image: e.target.files[0] });
+  };
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      buttonText: "",
+      buttonLink: "",
+      image: null,
+      currentImage: "",
+    });
+    setEditingProject(null);
+    setShowForm(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData();
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("buttonText", formData.buttonText);
+    data.append("buttonLink", formData.buttonLink);
+    if (formData.image) data.append("image", formData.image);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "multipart/form-data",
+      },
     };
 
-    const handleFileChange = (e) => {
-        setFormData({ ...formData, image: e.target.files[0] });
-    };
+    try {
+      if (editingProject) {
+        await axiosInstance.put(`/projects/${editingProject._id}`, data, config);
+      } else {
+        await axiosInstance.post("/projects", data, config);
+      }
+      refetchPortfolio();
+      resetForm();
+    } catch (error) {
+      console.error("Error submitting form:", error.response?.data || error.message);
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const data = new FormData();
-        
-        // Only append the actual form fields, not internal state like currentImage
-        data.append('title', formData.title);
-        data.append('description', formData.description);
-        data.append('buttonText', formData.buttonText);
-        data.append('buttonLink', formData.buttonLink);
-        
-        // Only append image if a file is selected
-        if (formData.image) {
-            data.append('image', formData.image);
-            console.log('📁 Frontend: Image file being sent:', formData.image.name);
-        } else {
-            console.log('📁 Frontend: No image file selected');
-        }
+  const handleEdit = (project) => {
+    setEditingProject(project);
+    setFormData({
+      title: project.title,
+      description: project.description,
+      buttonText: project.buttonText,
+      buttonLink: project.buttonLink,
+      image: null,
+      currentImage: project.image,
+    });
+    setShowForm(true);
+  };
 
-        console.log('📝 Frontend: Form data being sent:');
-        for (let [key, value] of data.entries()) {
-            console.log(`  ${key}:`, value);
-        }
+  const handleDelete = async (id) => {
+    const config = { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } };
+    await axiosInstance.delete(`/projects/${id}`, config);
+    refetchPortfolio();
+  };
 
-        const config = {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'multipart/form-data'
-            }
-        };
+  return (
+    <AdminShell
+      index="01 / Projects"
+      title="Manage Projects"
+      subtitle="Create and update featured portfolio projects."
+      action={
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="btn-solid inline-flex items-center gap-2 px-4 py-2.5 font-display text-sm font-semibold"
+        >
+          <AiOutlinePlusCircle />
+          {showForm ? "Hide form" : "Add project"}
+        </button>
+      }
+    >
+      {showForm && (
+        <motion.form
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          onSubmit={handleSubmit}
+          className={`${adminPanelClass} mb-10 max-w-2xl space-y-4`}
+        >
+          <h2 className="font-display text-xl font-semibold text-white">
+            {editingProject ? "Edit project" : "Add project"}
+          </h2>
 
-        try {
-            if (editingProject) {
-                console.log('🔄 Frontend: Updating project with ID:', editingProject._id);
-                await axiosInstance.put(`/projects/${editingProject._id}`, data, config);
-            } else {
-                console.log('➕ Frontend: Creating new project');
-                await axiosInstance.post('/projects', data, config);
-            }
-            refetchPortfolio();
-            setFormData({ title: '', description: '', buttonText: '', buttonLink: '', image: null, currentImage: '' });
-            setEditingProject(null);
-            setShowForm(false); // Close form on successful submission
-        } catch (error) {
-            console.error('❌ Frontend: Error submitting form:', error.response?.data || error.message);
-        }
-    };
-
-    const handleEdit = (project) => {
-        setEditingProject(project);
-        setFormData({ 
-            title: project.title, 
-            description: project.description, 
-            buttonText: project.buttonText, 
-            buttonLink: project.buttonLink, 
-            image: null,
-            currentImage: project.image // Store current image URL for display
-        });
-        setShowForm(true); // Open form when editing
-    };
-
-    const handleDelete = async (id) => {
-        const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
-        await axiosInstance.delete(`/projects/${id}`, config);
-        refetchPortfolio();
-    };
-
-    return (
-        <div className="text-white">
-            <h1 className="text-3xl font-bold mb-4 text-purple-600">Manage Projects</h1>
-
-            <button
-                onClick={() => setShowForm(!showForm)}
-                className="mb-4 px-4 py-2 bg-green-600 text-white rounded flex items-center space-x-2 hover:bg-green-700 transition-colors duration-300"
-            >
-                <AiOutlinePlusCircle />
-                <span>{showForm ? 'Hide Form' : 'Add New Project'}</span>
-            </button>
-
-            {showForm && (
-                <form onSubmit={handleSubmit} className="mb-8 p-4 border border-purple-600 rounded-lg max-w-lg mx-auto bg-gray-800">
-                    <h2 className="text-2xl mb-4 text-purple-600">{editingProject ? 'Edit Project' : 'Add Project'}</h2>
-                    
-                    {/* Show current image when editing */}
-                    {editingProject && formData.currentImage && (
-                        <div className="mb-4">
-                            <label className="block text-sm font-medium text-white mb-2">Current Image:</label>
-                            <img 
-                                src={formData.currentImage} 
-                                alt="Current project" 
-                                className="w-full h-32 object-cover rounded border border-purple-600"
-                            />
-                        </div>
-                    )}
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
-                        <input type="text" name="buttonText" value={formData.buttonText} onChange={handleInputChange} placeholder="Button Text" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
-                        <input type="text" name="buttonLink" value={formData.buttonLink} onChange={handleInputChange} placeholder="Button Link" className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" required />
-                    </div>
-                    
-                    {/* Description as textarea */}
-                    <div className="mt-4">
-                        <label className="block text-sm font-medium text-white mb-2">Description</label>
-                        <textarea 
-                            name="description" 
-                            value={formData.description} 
-                            onChange={handleInputChange} 
-                            placeholder="Enter project description..."
-                            rows={4}
-                            className="w-full p-3 border border-purple-600 rounded bg-gray-700 text-white resize-vertical"
-                            required 
-                        />
-                    </div>
-                        
-                    {/* File input with better styling */}
-                    <div className="mt-4">
-                        <label className="block text-sm font-medium text-white mb-2">
-                            {editingProject ? 'New Image (optional - leave empty to keep current)' : 'Project Image'}
-                        </label>
-                        <input 
-                            type="file" 
-                            name="image" 
-                            onChange={handleFileChange} 
-                            accept="image/*"
-                            className="w-full p-2 border border-purple-600 rounded bg-gray-700 text-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700"
-                        />
-                        {formData.image && (
-                            <p className="text-sm text-green-400 mt-1">✓ New image selected: {formData.image.name}</p>
-                        )}
-                    </div>
-                    <button type="submit" className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300">{editingProject ? 'Update' : 'Add'}</button>
-                </form>
-            )}
-
+          {editingProject && formData.currentImage && (
             <div>
-                <h2 className="text-2xl mb-4 text-purple-600">Existing Projects</h2>
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                    {projects.map(project => (
-                        <motion.div
-                            key={project._id}
-                            variants={itemVariants}
-                            whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                            className="bg-gray-800 border border-purple-600 rounded-lg overflow-hidden shadow-lg flex flex-col max-w-[320px] mx-auto w-full"
-                        >
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className="w-full h-40 object-cover"
-                            />
-                            <div className="p-4 flex flex-col flex-grow">
-                                <h3 className="text-lg font-bold text-purple-600 mb-2">
-                                    {project.title}
-                                </h3>
-                                <p className="text-sm text-gray-300 mb-3 flex-grow">
-                                    {project.description}
-                                </p>
-                                <a
-                                    href={project.buttonLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="bg-purple-500 py-1.5 px-3 rounded-md hover:bg-red-500 transition duration-300 text-center text-sm w-full sm:w-auto"
-                                >
-                                    {project.buttonText}
-                                </a>
-                                <div className="flex space-x-2 mt-4">
-                                    <button onClick={() => handleEdit(project)} className="px-4 py-2 bg-yellow-500 text-white rounded w-full hover:bg-yellow-600 transition-colors duration-300">Edit</button>
-                                    <button onClick={() => handleDelete(project._id)} className="px-4 py-2 bg-red-600 text-white rounded w-full hover:bg-red-700 transition-colors duration-300">Delete</button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    ))}
-                </div>
+              <label className={adminLabelClass}>Current image</label>
+              <img
+                src={formData.currentImage}
+                alt="Current project"
+                className="h-32 w-full border border-white/10 object-cover"
+              />
             </div>
-        </div>
-    );
+          )}
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className={adminLabelClass}>Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                required
+              />
+            </div>
+            <div>
+              <label className={adminLabelClass}>Button text</label>
+              <input
+                type="text"
+                name="buttonText"
+                value={formData.buttonText}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                required
+              />
+            </div>
+            <div className="md:col-span-2">
+              <label className={adminLabelClass}>Button link</label>
+              <input
+                type="text"
+                name="buttonLink"
+                value={formData.buttonLink}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={adminLabelClass}>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              rows={4}
+              className={`${adminInputClass} resize-y`}
+              required
+            />
+          </div>
+
+          <div>
+            <label className={adminLabelClass}>
+              {editingProject ? "New image (optional)" : "Project image"}
+            </label>
+            <input
+              type="file"
+              name="image"
+              onChange={handleFileChange}
+              accept="image/*"
+              className={`${adminInputClass} file:mr-4 file:border-0 file:bg-white file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-black`}
+            />
+            {formData.image && (
+              <p className="mt-1 font-mono text-xs text-emerald-400">
+                Selected: {formData.image.name}
+              </p>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-3 pt-2">
+            <button type="submit" className="btn-solid px-5 py-2.5 font-display text-sm font-semibold">
+              {editingProject ? "Update" : "Add"}
+            </button>
+            <button type="button" onClick={resetForm} className="btn-ghost px-5 py-2.5 font-display text-sm">
+              Cancel
+            </button>
+          </div>
+        </motion.form>
+      )}
+
+      <div className="mb-6 flex items-center gap-4">
+        <span className="section-rule" />
+        <h3 className="font-display text-lg font-semibold">
+          Catalog · {String(projects.length).padStart(2, "0")}
+        </h3>
+      </div>
+
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((project) => (
+          <motion.article
+            key={project._id}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`flex flex-col overflow-hidden ${adminListItemClass} bg-white/[0.02]`}
+          >
+            <img src={project.image} alt={project.title} className="h-36 w-full object-cover grayscale" />
+            <div className="flex flex-1 flex-col p-4">
+              <h3 className="font-display text-base font-semibold text-white">{project.title}</h3>
+              <p className="mt-2 flex-1 text-sm text-zinc-500 line-clamp-3">{project.description}</p>
+              <div className="mt-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleEdit(project)}
+                  className="btn-ghost flex-1 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em]"
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(project._id)}
+                  className="flex-1 border border-[color-mix(in_srgb,var(--accent-c)_35%,transparent)] px-3 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[var(--accent-c)] transition hover:bg-[color-mix(in_srgb,var(--accent-c)_10%,transparent)]"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+    </AdminShell>
+  );
 };
 
 export default ProjectsManager;

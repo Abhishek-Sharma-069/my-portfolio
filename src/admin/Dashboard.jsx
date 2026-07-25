@@ -1,33 +1,88 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { FaArrowRight } from "react-icons/fa";
+import AdminShell from "./AdminShell";
 
 const Dashboard = () => {
-    const adminSections = [
-        { name: 'Projects', path: '/admin/projects', description: 'Manage your portfolio projects', color: 'bg-blue-600' },
-        { name: 'Experience', path: '/admin/experience', description: 'Manage work experience and internships', color: 'bg-green-600' },
-        { name: 'Skills', path: '/admin/skills', description: 'Manage your technical skills', color: 'bg-purple-600' },
-        { name: 'Resume', path: '/admin/resume', description: 'Upload and manage your resume', color: 'bg-orange-600' }
-    ];
+  const data = useSelector((state) => state.portfolio.data);
+  const projectsCount = data?.projects?.length ?? 0;
+  const experienceCount =
+    data?.experience?.sections?.reduce((n, s) => n + (s.items?.length || 0), 0) ?? 0;
+  const skillsCount = data?.skills
+    ? Object.values(data.skills).reduce((n, arr) => n + (Array.isArray(arr) ? arr.length : 0), 0)
+    : 0;
+  const resumeReady = Boolean(data?.resumeUrl);
 
-    return (
-        <div className="text-white">
-            <h1 className="text-3xl font-bold mb-4 text-purple-600">Admin Dashboard</h1>
-            <p className="text-gray-300 mb-8">Welcome to the admin panel. Here you can manage your portfolio content.</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {adminSections.map((section, index) => (
-                    <Link
-                        key={index}
-                        to={section.path}
-                        className={`${section.color} p-6 rounded-lg hover:opacity-90 transition-opacity duration-200`}
-                    >
-                        <h3 className="text-xl font-bold mb-2">{section.name}</h3>
-                        <p className="text-sm opacity-90">{section.description}</p>
-                    </Link>
-                ))}
+  const sections = [
+    {
+      name: "Projects",
+      path: "/admin/projects",
+      description: "Create, edit, and remove portfolio projects.",
+      count: String(projectsCount).padStart(2, "0"),
+      meta: "catalog",
+    },
+    {
+      name: "Experience",
+      path: "/admin/experience",
+      description: "Volunteership, internships, and work roles.",
+      count: String(experienceCount).padStart(2, "0"),
+      meta: "roles",
+    },
+    {
+      name: "Skills",
+      path: "/admin/skills",
+      description: "Categories, icons, and skill colors.",
+      count: String(skillsCount).padStart(2, "0"),
+      meta: "nodes",
+    },
+    {
+      name: "Resume",
+      path: "/admin/resume",
+      description: "Upload and preview the PDF résumé.",
+      count: resumeReady ? "ON" : "OFF",
+      meta: "document",
+    },
+    {
+      name: "About",
+      path: "/admin/about",
+      description: "Headlines, intro copy, tagline, and email.",
+      count: data?.about?.email ? "ON" : "—",
+      meta: "identity",
+    },
+  ];
+
+  return (
+    <AdminShell
+      index="00 / Console"
+      title="Dashboard"
+      subtitle="Welcome back. Pick a module to update your public portfolio."
+    >
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {sections.map((section) => (
+          <Link
+            key={section.path}
+            to={section.path}
+            className="group accent-card border border-white/10 bg-white/[0.02] p-5"
+          >
+            <div className="mb-4 flex items-baseline justify-between gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
+                {section.meta}
+              </span>
+              <span className="font-display text-2xl font-semibold text-chroma">
+                {section.count}
+              </span>
             </div>
-        </div>
-    );
+            <h3 className="font-display text-xl font-semibold text-white">{section.name}</h3>
+            <p className="mt-2 text-sm text-zinc-500">{section.description}</p>
+            <span className="mt-4 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-500 transition group-hover:text-[var(--accent-a)]">
+              Open <FaArrowRight className="text-[10px]" />
+            </span>
+          </Link>
+        ))}
+      </div>
+    </AdminShell>
+  );
 };
 
 export default Dashboard;

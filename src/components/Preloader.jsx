@@ -3,50 +3,54 @@ import { motion } from "framer-motion";
 
 const pathVariants = {
   hidden: { pathLength: 0 },
-  visible: i => ({
+  visible: (i) => ({
     pathLength: 1,
     transition: {
-      pathLength: { delay: i * 0.2, type: "spring", duration: 1.5, bounce: 0 }
-    }
-  })
+      pathLength: { delay: i * 0.12, type: "spring", duration: 1.4, bounce: 0 },
+    },
+  }),
 };
 
 const Preloader = () => {
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-black">
+    <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-[var(--bg)]">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent-a) 10%, transparent), transparent 55%)",
+        }}
+      />
+      <div className="noise-overlay absolute inset-0" />
+
       <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.5 }}
+        initial={{ scale: 0.85, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.45 }}
+        className="relative z-10"
       >
-        <svg
-          width="200"
-          height="200"
-          viewBox="-10 -10 220 220"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-50 w-50"
-        >
+        <svg width="180" height="180" viewBox="-10 -10 220 220" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="hexagonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#9333ea" />
-              <stop offset="100%" stopColor="#ef4444" />
+              <stop offset="0%" stopColor="var(--accent-a)" />
+              <stop offset="50%" stopColor="var(--accent-b)" />
+              <stop offset="100%" stopColor="var(--accent-c)" />
             </linearGradient>
           </defs>
 
-          {/* Draw hexagon with individual lines */}
           {[
-            "M100,20 L180,70",    // Top right
-            "M180,70 L180,130",   // Right
-            "M180,130 L100,180",  // Bottom right
-            "M100,180 L20,130",   // Bottom left
-            "M20,130 L20,70",     // Left
-            "M20,70 L100,20"      // Top left
+            "M100,20 L180,70",
+            "M180,70 L180,130",
+            "M180,130 L100,180",
+            "M100,180 L20,130",
+            "M20,130 L20,70",
+            "M20,70 L100,20",
           ].map((path, i) => (
             <motion.path
               key={i}
               d={path}
               stroke="url(#hexagonGradient)"
-              strokeWidth="4"
+              strokeWidth="3"
               fill="none"
               custom={i}
               variants={pathVariants}
@@ -56,54 +60,42 @@ const Preloader = () => {
           ))}
           <motion.text
             x="100"
-            y="105"
+            y="108"
             textAnchor="middle"
             fill="url(#hexagonGradient)"
-            fontSize="36"
-            fontWeight="bold"
-            fontFamily="Signature"
-            initial={{ opacity: 0, y: 20 }}
+            fontSize="34"
+            fontWeight="700"
+            fontFamily="Unbounded, sans-serif"
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+            transition={{ delay: 0.55, duration: 0.45 }}
           >
             AS
           </motion.text>
         </svg>
       </motion.div>
 
-      <motion.div 
-        className="mt-6 flex items-center text-2xl text-purple-600  "
-        initial={{ opacity: 0, y: 20 }}
+      <motion.div
+        className="relative z-10 mt-8 flex items-center font-mono text-sm tracking-wide text-zinc-400"
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
+        transition={{ delay: 0.75, duration: 0.45 }}
       >
-        <motion.span
-          className="font-mono"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          &lt;
-        </motion.span>
-        <motion.span 
-          className="font-signature text-4xl px-2 bg-gradient-to-r from-purple-600 to-red-500 text-transparent bg-clip-text"
-          initial={{ scale: 1.2, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ 
-            duration: 0.8,
-            delay: 1,
-            ease: "easeOut"
-          }}
-        >
+        <span className="opacity-50">&lt;</span>
+        <span className="mx-2 font-display text-2xl font-semibold text-chroma sm:text-3xl">
           Abhishek Sharma
-        </motion.span>
-        <motion.span
-          className="font-mono"
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-        >
-          /&gt;
-        </motion.span>
+        </span>
+        <span className="opacity-50">/&gt;</span>
       </motion.div>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.3, 0.8, 0.3] }}
+        transition={{ delay: 1.1, duration: 1.6, repeat: Infinity }}
+        className="relative z-10 mt-4 font-mono text-[10px] uppercase tracking-[0.35em] text-zinc-600"
+      >
+        Initializing neural field
+      </motion.p>
     </div>
   );
 };

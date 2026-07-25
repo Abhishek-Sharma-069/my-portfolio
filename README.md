@@ -60,7 +60,6 @@ npm run preview
 ```
 my-portfolio/
 ├── public/                # Public assets
-│   └── vite.svg
 ├── src/                  # Source files
 │   ├── assets/          # Static assets
 │   │   ├── images/      # Image assets

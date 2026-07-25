@@ -1,101 +1,134 @@
-import React, { useState } from 'react';
-import { AiOutlinePlusCircle } from "react-icons/ai"; // Import the icon
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
-import axiosInstance from '../config/axios';
+import React, { useState } from "react";
+import { AiOutlinePlusCircle } from "react-icons/ai";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchPortfolioData } from "../redux/slices/portfolioSlice";
+import axiosInstance from "../config/axios";
+import AdminShell, { adminInputClass, adminLabelClass, adminPanelClass } from "./AdminShell";
 
 const ResumeManager = () => {
-    const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? '');
-    const dispatch = useDispatch();
-    const [file, setFile] = useState(null);
-    const [showForm, setShowForm] = useState(false); // State to control form visibility
-    const [showResume, setShowResume] = useState(false); // State to control resume iframe visibility
+  const resumeUrl = useSelector((state) => state.portfolio.data?.resumeUrl ?? "");
+  const dispatch = useDispatch();
+  const [file, setFile] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [showResume, setShowResume] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
-    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
+  const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
-    };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('resume', file);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("resume", file);
+    setUploading(true);
 
-        try {
-            await axiosInstance.put('/resume', formData, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            });
+    try {
+      await axiosInstance.put("/resume", formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      await refetchPortfolio();
+      setFile(null);
+      setShowForm(false);
+    } catch (error) {
+      console.error("Error uploading resume:", error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
-            await refetchPortfolio();
-            setFile(null);
-            setShowForm(false); // Close form on successful submission
-        } catch (error) {
-            console.error('Error uploading resume:', error);
-        }
-    };
+  return (
+    <AdminShell
+      index="04 / Resume"
+      title="Manage Resume"
+      subtitle="Upload and preview the public PDF résumé."
+      action={
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="btn-solid inline-flex items-center gap-2 px-4 py-2.5 font-display text-sm font-semibold"
+        >
+          <AiOutlinePlusCircle />
+          {showForm ? "Hide form" : "Upload resume"}
+        </button>
+      }
+    >
+      {showForm && (
+        <form onSubmit={handleSubmit} className={`${adminPanelClass} mb-10 max-w-xl space-y-4`}>
+          <h2 className="font-display text-xl font-semibold text-white">Upload new resume</h2>
+          <div>
+            <label className={adminLabelClass}>PDF file</label>
+            <input
+              type="file"
+              name="resume"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className={`${adminInputClass} file:mr-4 file:border-0 file:bg-white file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-black`}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={!file || uploading}
+            className="btn-solid px-5 py-2.5 font-display text-sm font-semibold disabled:opacity-50"
+          >
+            {uploading ? "Uploading…" : "Upload"}
+          </button>
+        </form>
+      )}
 
-    return (
-        <div className="text-white">
-            <h1 className="text-3xl font-bold mb-4 text-purple-600">Manage Resume</h1>
+      <div className="mb-6 flex items-center gap-4">
+        <span className="section-rule" />
+        <h3 className="font-display text-lg font-semibold">Document</h3>
+      </div>
 
-            <button
-                onClick={() => setShowForm(!showForm)}
-                className="mb-4 px-4 py-2 bg-green-600 text-white rounded flex items-center space-x-2 hover:bg-green-700 transition-colors duration-300"
-            >
-                <AiOutlinePlusCircle />
-                <span>{showForm ? 'Hide Form' : 'Upload New Resume'}</span>
-            </button>
-
-            {showForm && (
-                <form onSubmit={handleSubmit} className="p-4 border border-purple-600 rounded-lg max-w-lg mx-auto bg-gray-800">
-                    <h2 className="text-2xl mb-4 text-purple-600">Upload New Resume</h2>
-                    <input type="file" name="resume" onChange={handleFileChange} className="w-full p-1 border border-purple-600 rounded bg-gray-700 text-white" />
-                    <button type="submit" className="mt-4 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300" disabled={!file}>
-                        Upload
-                    </button>
-                </form>
-            )}
-
-            <div className="mb-8 p-4 border border-purple-600 rounded-lg bg-gray-800 max-w-lg mx-auto">
-                <h2 className="text-2xl mb-4 text-purple-600">Current Resume</h2>
-                {resumeUrl ? (
-                    <div className="space-y-4">
-                        <div className="flex space-x-4">
-                            <button 
-                                onClick={() => setShowResume(!showResume)}
-                                className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300"
-                            >
-                                {showResume ? 'Hide Resume' : 'View Resume'}
-                            </button>
-                            <a 
-                                href={resumeUrl} 
-                                target="_blank" 
-                                rel="noopener noreferrer" 
-                                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors duration-300"
-                            >
-                                Open in New Tab
-                            </a>
-                        </div>
-                        {showResume && (
-                            <div className="mt-4">
-                                <iframe
-                                    src={`${resumeUrl}#toolbar=0`}
-                                    title="Resume Preview"
-                                    className="w-full h-96 border border-purple-600 rounded-lg"
-                                    style={{ minHeight: '500px' }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <p className="text-gray-300">No resume uploaded yet.</p>
-                )}
-            </div>
+      <div className={`${adminPanelClass} max-w-2xl`}>
+        <div className="mb-4 flex items-baseline justify-between gap-3 border-b border-white/5 pb-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
+            Status
+          </span>
+          <span className={`font-display text-lg font-semibold ${resumeUrl ? "text-chroma" : "text-zinc-500"}`}>
+            {resumeUrl ? "Ready" : "Missing"}
+          </span>
         </div>
-    );
+
+        {resumeUrl ? (
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setShowResume(!showResume)}
+                className="btn-solid px-4 py-2 font-display text-sm font-semibold"
+              >
+                {showResume ? "Hide preview" : "View preview"}
+              </button>
+              <a
+                href={resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em]"
+              >
+                Open tab
+              </a>
+            </div>
+            {showResume && (
+              <iframe
+                src={`${resumeUrl}#toolbar=0`}
+                title="Resume Preview"
+                className="h-[500px] w-full border border-white/10 bg-white"
+              />
+            )}
+          </div>
+        ) : (
+          <p className="text-sm text-zinc-500">No resume uploaded yet.</p>
+        )}
+      </div>
+    </AdminShell>
+  );
 };
 
 export default ResumeManager;

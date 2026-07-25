@@ -7,11 +7,12 @@ import {
   FaGithub,
   FaInstagram,
   FaDiscord,
+  FaArrowRight,
 } from "react-icons/fa";
 import { contactData } from "../data/indexData";
-import contactIllustration from "../assets/images/contact_illustration.svg";
+import { githubProfile } from "../data/githubData";
+import PageShell from "./PageShell";
 
-// Map JSON icon names to React Icons
 const iconMap = {
   FaFacebook,
   FaTwitter,
@@ -21,166 +22,213 @@ const iconMap = {
   FaDiscord,
 };
 
+const domains = [
+  { label: "Collaborate", hint: "Projects · ideas" },
+  { label: "Hire", hint: "Roles · internships" },
+  { label: "Say hi", hint: "Questions · feedback" },
+];
+
 const Contact = () => {
-  const [submitStatus, setSubmitStatus] = useState('');
+  const [submitStatus, setSubmitStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const formData = {
         access_key: "398273e9-b9d4-48e1-ae35-f80afff23673",
         name: event.target.name.value,
         email: event.target.email.value,
         message: event.target.message.value,
-        subject: "New Contact Form Submission"
+        subject: "New Contact Form Submission",
       };
 
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
 
       if (data.success) {
-        setSubmitStatus('Thank you for your message!');
+        setSubmitStatus("Thank you for your message!");
         event.target.reset();
       } else {
-        setSubmitStatus('Something went wrong. Please try again.');
+        setSubmitStatus("Something went wrong. Please try again.");
       }
-    } catch (error) {
-      setSubmitStatus('Failed to send message. Please try again.');
+    } catch {
+      setSubmitStatus("Failed to send message. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="w-full text-white bg-black py-8 sm:py-12 lg:py-16">
-      <div className="container mx-auto px-2 sm:px-6 flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-12">
-        {/* Left Side */}
+    <PageShell
+      index="07 / Contact"
+      title={contactData.title}
+      subtitle={contactData.description}
+    >
+      {/* Intro above form — mirrors Projects / Experience / Resume */}
+      <div className="mb-14 grid grid-cols-1 gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-end">
         <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
         >
-          <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="flex items-center gap-2 sm:gap-4 mb-4 sm:mb-6"
-          >
-            <h2 className="text-purple-600 font-bold text-2xl sm:text-3xl md:text-4xl">{contactData.title}</h2>
-            <div className="bg-purple-600 h-1 w-12 sm:w-20 md:w-40 rounded-md"></div>
-          </motion.div>
-          
-          <motion.img
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-            src={contactIllustration}
-            alt="Developer Illustration"
-            className="w-full max-w-[180px] sm:max-w-[250px] lg:max-w-xs my-4 sm:my-6 rounded-lg scale-x-[-1] transform hover:scale-105"
-          />
-
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-4 sm:mb-6 px-2 sm:px-0">
-            {contactData.description}
+          <p className="font-mono text-[11px] uppercase tracking-[0.3em] text-zinc-500">
+            Get in touch
+          </p>
+          <h2 className="mt-3 max-w-xl font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+            Tell me what you&apos;re building — I&apos;ll reply.
+          </h2>
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
+            Open to collaborations, product work, and thoughtful conversations.
+            Prefer socials? Find me on the channels below.
           </p>
 
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-            className="flex gap-3 sm:gap-4 md:gap-6 mb-8 lg:mb-0 flex-wrap justify-center lg:justify-start"
-          >
-            {contactData.socials.map((social, index) => {
+          <div className="mt-7 flex flex-wrap gap-2">
+            {domains.map((d) => (
+              <div
+                key={d.label}
+                className="accent-chip border border-white/10 bg-white/[0.02] px-3 py-2"
+              >
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-300">
+                  {d.label}
+                </p>
+                <p className="mt-0.5 text-[11px] text-zinc-600">{d.hint}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {contactData.socials.map((social) => {
               const IconComponent = iconMap[social.icon];
+              if (!IconComponent) return null;
               return (
                 <a
-                  key={index}
+                  key={social.name}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-purple-600 text-3xl hover:text-red-600 transition duration-300"
+                  aria-label={social.name}
+                  className="text-zinc-500 transition duration-300 hover:scale-110 hover:text-[var(--accent-a)]"
                 >
-                  <IconComponent />
+                  <IconComponent className="text-xl" />
                 </a>
               );
             })}
-          </motion.div>
+          </div>
         </motion.div>
 
-        {/* Right Side: Contact Form */}
         <motion.div
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.5 }}
-          className="w-full lg:w-1/2 bg-gray-800 p-3 sm:p-4 md:p-6 lg:p-8 rounded-lg shadow-lg"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.08 }}
+          className="flex flex-col gap-3 border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-5"
         >
-          <form className="flex flex-col gap-3 sm:gap-4 md:gap-6" onSubmit={onSubmit}>
-            {submitStatus && (
-              <div className={`text-center text-sm ${submitStatus.includes('Thank you') ? 'text-green-500' : 'text-red-500'}`}>
-                {submitStatus}
-              </div>
-            )}
-            <div className="flex flex-col gap-2">
-              <label htmlFor="name" className="text-gray-300 text-sm font-bold">
-                Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                required
-                className="w-full p-2 sm:p-3 rounded-md bg-gray-700 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-600"
-                placeholder="Your name"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="email" className="text-gray-300 text-sm font-bold">
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                required
-                className="w-full p-2 sm:p-3 rounded-md bg-gray-700 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-600"
-                placeholder="your.email@example.com"
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="message" className="text-gray-300 text-sm font-bold">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={4}
-                className="w-full p-2 sm:p-3 rounded-md bg-gray-700 text-white text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-purple-600"
-                placeholder="Your message here..."
-              />
-            </div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-purple-600 text-white py-2 sm:py-3 rounded-md font-bold text-sm sm:text-base hover:bg-purple-700 transition duration-300 disabled:opacity-50"
-            >
-              {isLoading ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+          <div className="flex items-baseline justify-between gap-4 border-b border-white/5 pb-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
+              Direct line
+            </span>
+            <span className="font-display text-lg font-semibold text-chroma">
+              {String(contactData.socials.length).padStart(2, "0")}
+            </span>
+          </div>
+          <p className="text-sm leading-relaxed text-zinc-500">
+            Channels online. Or email me straight — I check it often.
+          </p>
+          <a
+            href={`mailto:${githubProfile.email}`}
+            className="accent-link mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400"
+          >
+            {githubProfile.email}
+            <FaArrowRight className="text-[10px]" />
+          </a>
         </motion.div>
       </div>
-    </div>
+
+      <div className="mb-6 flex items-center gap-4">
+        <span className="section-rule" />
+        <h3 className="font-display text-lg font-semibold text-white sm:text-xl">
+          Message
+        </h3>
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.1 }}
+        className="mx-auto w-full max-w-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-8"
+      >
+        <form className="flex flex-col gap-5" onSubmit={onSubmit}>
+          {submitStatus && (
+            <div
+              className="text-center text-sm"
+              style={{
+                color: submitStatus.includes("Thank you")
+                  ? "var(--accent-a)"
+                  : "var(--accent-c)",
+              }}
+            >
+              {submitStatus}
+            </div>
+          )}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="name" className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
+              placeholder="Your name"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="email" className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
+              placeholder="your.email@example.com"
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="message" className="font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-500">
+              Message
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              required
+              rows={5}
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
+              placeholder="What are you working on?"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="btn-solid w-full py-3 font-display text-sm font-semibold disabled:opacity-50"
+          >
+            {isLoading ? "Sending..." : "Send Message"}
+          </button>
+        </form>
+      </motion.div>
+    </PageShell>
   );
 };
 
