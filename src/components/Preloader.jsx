@@ -14,7 +14,13 @@ const pathVariants = {
 const Preloader = () => {
   return (
     <div className="relative flex h-screen flex-col items-center justify-center overflow-hidden bg-[var(--bg)]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(103,232,249,0.08),transparent_55%)]" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent-a) 10%, transparent), transparent 55%)",
+        }}
+      />
       <div className="noise-overlay absolute inset-0" />
 
       <motion.div
@@ -26,12 +32,9 @@ const Preloader = () => {
         <svg width="180" height="180" viewBox="-10 -10 220 220" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="hexagonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#67e8f9">
-                <animate attributeName="stop-color" values="#67e8f9;#c4b5fd;#fda4af;#fde68a;#67e8f9" dur="4s" repeatCount="indefinite" />
-              </stop>
-              <stop offset="100%" stopColor="#c4b5fd">
-                <animate attributeName="stop-color" values="#c4b5fd;#fda4af;#fde68a;#67e8f9;#c4b5fd" dur="4s" repeatCount="indefinite" />
-              </stop>
+              <stop offset="0%" stopColor="var(--accent-a)" />
+              <stop offset="50%" stopColor="var(--accent-b)" />
+              <stop offset="100%" stopColor="var(--accent-c)" />
             </linearGradient>
           </defs>
 
@@ -62,7 +65,7 @@ const Preloader = () => {
             fill="url(#hexagonGradient)"
             fontSize="34"
             fontWeight="700"
-            fontFamily="Syne, sans-serif"
+            fontFamily="Unbounded, sans-serif"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55, duration: 0.45 }}

@@ -8,11 +8,27 @@ import {
   LEVEL_COLORS,
 } from "../data/githubData";
 
-const GitHubPulse = () => {
+function formatDayLabel(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(`${dateStr}T12:00:00`);
+  return d.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+const GitHubPulse = ({ education, platforms }) => {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [hover, setHover] = useState(null);
+
+  const educationList =
+    Array.isArray(education) && education.length ? education : githubProfile.education;
+  const platformList =
+    Array.isArray(platforms) && platforms.length ? platforms : githubProfile.platforms;
 
   useEffect(() => {
     let alive = true;
@@ -47,6 +63,13 @@ const GitHubPulse = () => {
     [data]
   );
   const total = data?.total?.lastYear ?? 0;
+
+  const todayEntry = useMemo(() => {
+    const list = data?.contributions || [];
+    if (!list.length) return null;
+    const today = new Date().toISOString().slice(0, 10);
+    return list.find((d) => d.date === today) ?? list[list.length - 1];
+  }, [data]);
 
   const monthLabels = useMemo(() => {
     if (!weeks.length) return [];
@@ -92,21 +115,29 @@ const GitHubPulse = () => {
         </a>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         {[
           { label: "Total", value: loading ? "—" : total.toLocaleString() },
           { label: "Active days", value: loading ? "—" : summary.activeDays },
           { label: "Max streak", value: loading ? "—" : `${summary.maxStreak}d` },
           { label: "Current", value: loading ? "—" : `${summary.currentStreak}d` },
-        ].map((stat) => (
+          {
+            label: "Today",
+            value: loading || !todayEntry ? "—" : todayEntry.count,
+          },
+        ].map((stat, i) => (
           <div
             key={stat.label}
-            className="border border-white/10 bg-white/[0.02] px-4 py-4"
+            className="accent-hover-border border border-white/10 bg-white/[0.02] px-4 py-4"
           >
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               {stat.label}
             </p>
-            <p className="mt-2 font-display text-2xl font-semibold text-white sm:text-3xl">
+            <p
+              className={`mt-2 font-display text-2xl font-semibold sm:text-3xl ${
+                i === 0 ? "text-chroma" : "text-white"
+              }`}
+            >
               {stat.value}
             </p>
           </div>
@@ -125,13 +156,16 @@ const GitHubPulse = () => {
           </div>
         )}
         {error && !loading && (
-          <div className="flex h-32 items-center justify-center font-mono text-xs text-rose-300">
+          <div className="flex h-32 items-center justify-center font-mono text-xs text-[var(--accent-c)]">
             {error}
           </div>
         )}
         {!loading && !error && (
           <>
-            <div className="relative mb-2 h-4 overflow-hidden pl-7" style={{ minWidth: weeks.length * 14 }}>
+            <div
+              className="relative mb-2 h-4 overflow-hidden pl-7"
+              style={{ minWidth: weeks.length * 14 }}
+            >
               {monthLabels.map(({ wi, month }) => (
                 <span
                   key={`${month}-${wi}`}
@@ -149,7 +183,7 @@ const GitHubPulse = () => {
                 <span>Wed</span>
                 <span>Fri</span>
               </div>
-              <div className="flex gap-[3px]">
+              <div className="relative flex gap-[3px]">
                 {weeks.map((week, wi) => (
                   <div key={wi} className="flex flex-col gap-[3px]">
                     {week.map((day, di) => {
@@ -157,29 +191,61 @@ const GitHubPulse = () => {
                         return <div key={`${wi}-${di}`} className="h-[11px] w-[11px]" />;
                       }
                       const level = Math.min(4, Math.max(0, day.level ?? 0));
+                      const isToday =
+                        todayEntry && day.date === todayEntry.date;
                       return (
                         <button
                           key={day.date}
                           type="button"
                           aria-label={`${day.count} contributions on ${day.date}`}
-                          onMouseEnter={() => setHover(day)}
+                          onMouseEnter={(e) => {
+                            const rect = e.currentTarget.getBoundingClientRect();
+                            const parent = e.currentTarget.closest(".relative");
+                            const pref = parent?.getBoundingClientRect();
+                            setHover({
+                              ...day,
+                              x: rect.left - (pref?.left ?? 0) + rect.width / 2,
+                              y: rect.top - (pref?.top ?? 0) - 8,
+                            });
+                          }}
                           onMouseLeave={() => setHover(null)}
-                          className={`h-[11px] w-[11px] rounded-[2px] transition hover:ring-1 hover:ring-white/50 ${LEVEL_COLORS[level]}`}
+                          className={`h-[11px] w-[11px] rounded-[2px] transition hover:ring-1 hover:ring-white/50 ${LEVEL_COLORS[level]} ${
+                            isToday ? "ring-1 ring-[var(--accent-a)]" : ""
+                          }`}
                         />
                       );
                     })}
                   </div>
                 ))}
+
+                {hover && (
+                  <div
+                    className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full whitespace-nowrap border border-white/15 bg-[var(--bg)] px-3 py-2 shadow-xl"
+                    style={{ left: hover.x, top: hover.y }}
+                  >
+                    <p className="font-display text-sm font-semibold text-white">
+                      {hover.count}{" "}
+                      <span className="font-body text-xs font-normal text-zinc-400">
+                        contribution{hover.count === 1 ? "" : "s"}
+                      </span>
+                    </p>
+                    <p className="mt-0.5 font-mono text-[10px] text-zinc-500">
+                      {formatDayLabel(hover.date)}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <p className="font-mono text-[11px] text-zinc-500">
                 {hover
-                  ? `${hover.count} contribution${hover.count === 1 ? "" : "s"} on ${hover.date}`
-                  : summary.bestDay.date
-                    ? `Peak day · ${summary.bestDay.count} on ${summary.bestDay.date}`
-                    : "Hover a cell for details"}
+                  ? `${hover.count} contribution${hover.count === 1 ? "" : "s"} on ${formatDayLabel(hover.date)}`
+                  : todayEntry
+                    ? `Today · ${todayEntry.count} contribution${todayEntry.count === 1 ? "" : "s"}`
+                    : summary.bestDay.date
+                      ? `Peak day · ${summary.bestDay.count} on ${formatDayLabel(summary.bestDay.date)}`
+                      : "Hover a cell for day details"}
               </p>
               <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-wider text-zinc-600">
                 Less
@@ -199,13 +265,13 @@ const GitHubPulse = () => {
             Platforms
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            {githubProfile.platforms.map((platform) => (
+            {platformList.map((platform) => (
               <a
                 key={platform.name}
                 href={platform.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-white/10 px-3 py-2 font-mono text-[11px] text-zinc-400 transition hover:border-white/30 hover:text-white"
+                className="accent-chip border border-white/10 px-3 py-2 font-mono text-[11px] text-zinc-400"
               >
                 {platform.name}
               </a>
@@ -217,8 +283,8 @@ const GitHubPulse = () => {
             Education
           </p>
           <ul className="mt-4 space-y-3">
-            {githubProfile.education.map((edu) => (
-              <li key={edu.qualification} className="flex items-start justify-between gap-4">
+            {educationList.map((edu) => (
+              <li key={`${edu.qualification}-${edu.institute}`} className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-zinc-200">{edu.qualification}</p>
                   <p className="text-xs text-zinc-500">{edu.institute}</p>

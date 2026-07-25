@@ -5,6 +5,17 @@
     <link rel="icon" type="image/svg+xml" href="./src/assets/images/Abhishek_img.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Abhishek Sharma</title>
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("portfolio-theme");
+          var ok = ["void", "ember", "forest", "midnight", "violet"].indexOf(t) !== -1;
+          document.documentElement.setAttribute("data-theme", ok ? t : "void");
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "void");
+        }
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500&family=Unbounded:wght@400;500;600;700&display=swap" rel="stylesheet" />

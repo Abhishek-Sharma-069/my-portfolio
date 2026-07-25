@@ -1,349 +1,341 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import axiosInstance from '../config/axios';
-import { fetchPortfolioData } from '../redux/slices/portfolioSlice';
+import React, { useState, useEffect, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import axiosInstance from "../config/axios";
+import { fetchPortfolioData } from "../redux/slices/portfolioSlice";
 import { motion } from "framer-motion";
 import { AiOutlinePlusCircle, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
-
-const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
+import AdminShell, { adminInputClass, adminLabelClass, adminPanelClass, adminListItemClass } from "./AdminShell";
 
 const defaultSkillsShape = {
-    "General": [],
-    "Web Development": [],
-    "Mobile Development": [],
-    "Databases": [],
-    "DevOps & Tools": []
+  General: [],
+  "Web Development": [],
+  "Mobile Development": [],
+  Databases: [],
+  "DevOps & Tools": [],
 };
 
 const cloneSkills = (source = {}) => ({
-    "General": [...(Array.isArray(source.General) ? source.General : [])],
-    "Web Development": [...(Array.isArray(source["Web Development"]) ? source["Web Development"] : [])],
-    "Mobile Development": [...(Array.isArray(source["Mobile Development"]) ? source["Mobile Development"] : [])],
-    "Databases": [...(Array.isArray(source.Databases) ? source.Databases : [])],
-    "DevOps & Tools": [...(Array.isArray(source["DevOps & Tools"]) ? source["DevOps & Tools"] : [])]
+  General: [...(Array.isArray(source.General) ? source.General : [])],
+  "Web Development": [
+    ...(Array.isArray(source["Web Development"]) ? source["Web Development"] : []),
+  ],
+  "Mobile Development": [
+    ...(Array.isArray(source["Mobile Development"]) ? source["Mobile Development"] : []),
+  ],
+  Databases: [...(Array.isArray(source.Databases) ? source.Databases : [])],
+  "DevOps & Tools": [
+    ...(Array.isArray(source["DevOps & Tools"]) ? source["DevOps & Tools"] : []),
+  ],
 });
 
 const SkillsManager = () => {
-    const dispatch = useDispatch();
-    const portfolioSkills = useSelector((state) => state.portfolio.data?.skills);
-    const [skills, setSkills] = useState(defaultSkillsShape);
-    const [formData, setFormData] = useState({ 
-        category: 'General', 
-        name: '', 
-        icon: '', 
-        color: 'text-blue-500' 
-    });
-    const [editingSkill, setEditingSkill] = useState(null);
-    const [showForm, setShowForm] = useState(false);
+  const dispatch = useDispatch();
+  const portfolioSkills = useSelector((state) => state.portfolio.data?.skills);
+  const [skills, setSkills] = useState(defaultSkillsShape);
+  const [formData, setFormData] = useState({
+    category: "General",
+    name: "",
+    icon: "",
+    color: "text-blue-500",
+  });
+  const [editingSkill, setEditingSkill] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
-    const categories = [
-        { key: 'General', label: 'General', color: 'text-yellow-400' },
-        { key: 'Web Development', label: 'Web Development', color: 'text-green-400' },
-        { key: 'Mobile Development', label: 'Mobile Development', color: 'text-blue-400' },
-        { key: 'Databases', label: 'Databases', color: 'text-teal-400' },
-        { key: 'DevOps & Tools', label: 'DevOps & Tools', color: 'text-purple-400' }
-    ];
+  const categories = [
+    { key: "General", label: "General" },
+    { key: "Web Development", label: "Web Development" },
+    { key: "Mobile Development", label: "Mobile Development" },
+    { key: "Databases", label: "Databases" },
+    { key: "DevOps & Tools", label: "DevOps & Tools" },
+  ];
 
-    // Common icon examples for reference
-    const iconExamples = [
-        // Java
-        'FaJava', 'DiJava', 'SiSpring', 'SiSpringboot', 'SiHibernate',
-        'SiApachemaven', 'SiGradle', 'SiJunit5', 'SiApachekafka',
-        // Python / AI
-        'FaPython', 'SiDjango', 'SiFlask', 'SiFastapi', 'SiPandas',
-        'SiNumpy', 'SiPytorch', 'SiTensorflow', 'SiLangchain', 'SiLanggraph',
-        // .NET
-        'SiDotnet', 'TbBrandCSharp', 'SiBlazor', 'SiNuget', 'TbBrandAzure',
-        // Web / tools
-        'FaReact', 'SiNextdotjs', 'FaDocker', 'SiRedis', 'DiRedis'
-    ];
+  const iconExamples = [
+    "FaJava",
+    "DiJava",
+    "SiSpring",
+    "SiSpringboot",
+    "FaPython",
+    "SiDjango",
+    "SiFastapi",
+    "SiPytorch",
+    "SiLangchain",
+    "SiLanggraph",
+    "SiDotnet",
+    "TbBrandCSharp",
+    "FaReact",
+    "SiNextdotjs",
+    "FaDocker",
+    "SiRedis",
+  ];
 
-    // Common color examples for reference
-    const colorExamples = [
-        'text-red-500', 'text-blue-500', 'text-yellow-500', 'text-green-500',
-        'text-purple-500', 'text-pink-500', 'text-indigo-500', 'text-teal-500',
-        'text-orange-500', 'text-cyan-500', 'text-lime-500', 'text-white',
-        'text-gray-500', 'text-slate-500', 'text-zinc-500', 'text-neutral-500',
-        'text-emerald-500', 'text-violet-500', 'text-fuchsia-500', 'text-rose-500'
-    ];
+  const colorExamples = [
+    "text-red-500",
+    "text-blue-500",
+    "text-yellow-500",
+    "text-green-500",
+    "text-cyan-500",
+    "text-violet-500",
+    "text-rose-500",
+    "text-white",
+  ];
 
-    const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
+  const totalSkills = useMemo(
+    () => Object.values(skills).reduce((n, arr) => n + (arr?.length || 0), 0),
+    [skills]
+  );
 
-    useEffect(() => {
-        if (!portfolioSkills) return;
-        // Copy arrays so we never mutate frozen Redux state
-        setSkills(cloneSkills(portfolioSkills));
-    }, [portfolioSkills]);
+  const refetchPortfolio = () => dispatch(fetchPortfolioData({ force: true }));
 
-    const handleInputChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  useEffect(() => {
+    if (!portfolioSkills) return;
+    setSkills(cloneSkills(portfolioSkills));
+  }, [portfolioSkills]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-        try {
-            const updatedSkills = cloneSkills(skills);
-            
-            if (editingSkill) {
-                // Update existing skill
-                const { category, index } = editingSkill;
-                updatedSkills[category][index] = {
-                    name: formData.name,
-                    icon: formData.icon,
-                    color: formData.color
-                };
-            } else {
-                // Add new skill
-                updatedSkills[formData.category].push({
-                    name: formData.name,
-                    icon: formData.icon,
-                    color: formData.color
-                });
-            }
+  const resetForm = () => {
+    setFormData({ category: "General", name: "", icon: "", color: "text-blue-500" });
+    setEditingSkill(null);
+    setShowForm(false);
+  };
 
-            await axiosInstance.put('/portfolio-data', 
-                { skills: updatedSkills }, 
-                config
-            );
-            
-            refetchPortfolio();
-            setFormData({ category: 'General', name: '', icon: '', color: 'text-blue-500' });
-            setEditingSkill(null);
-            setShowForm(false);
-        } catch (error) {
-            console.error('Error saving skills:', error);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const config = { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } };
 
-    const handleEdit = (category, skill, index) => {
-        setEditingSkill({ category, index });
-        setFormData({
-            category: category,
-            name: skill.name,
-            icon: skill.icon,
-            color: skill.color
+    try {
+      const updatedSkills = cloneSkills(skills);
+
+      if (editingSkill) {
+        const { category, index } = editingSkill;
+        updatedSkills[category][index] = {
+          name: formData.name,
+          icon: formData.icon,
+          color: formData.color,
+        };
+      } else {
+        updatedSkills[formData.category].push({
+          name: formData.name,
+          icon: formData.icon,
+          color: formData.color,
         });
-        setShowForm(true);
-    };
+      }
 
-    const handleDelete = async (category, index) => {
-        if (window.confirm('Are you sure you want to delete this skill?')) {
-            const config = { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } };
-            
-            try {
-                const updatedSkills = cloneSkills(skills);
-                updatedSkills[category].splice(index, 1);
-                
-                await axiosInstance.put('/portfolio-data', 
-                    { skills: updatedSkills }, 
-                    config
-                );
-                
-                refetchPortfolio();
-            } catch (error) {
-                console.error('Error deleting skill:', error);
-            }
-        }
-    };
+      await axiosInstance.put("/portfolio-data", { skills: updatedSkills }, config);
+      refetchPortfolio();
+      resetForm();
+    } catch (error) {
+      console.error("Error saving skills:", error);
+    }
+  };
 
-    const renderSkillCard = (category, skillsList, categoryInfo) => (
-        <motion.div
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-            className="bg-gray-800 rounded-lg p-6 border border-gray-700"
+  const handleEdit = (category, skill, index) => {
+    setEditingSkill({ category, index });
+    setFormData({
+      category,
+      name: skill.name,
+      icon: skill.icon,
+      color: skill.color,
+    });
+    setShowForm(true);
+  };
+
+  const handleDelete = async (category, index) => {
+    if (!window.confirm("Are you sure you want to delete this skill?")) return;
+    const config = { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } };
+
+    try {
+      const updatedSkills = cloneSkills(skills);
+      updatedSkills[category].splice(index, 1);
+      await axiosInstance.put("/portfolio-data", { skills: updatedSkills }, config);
+      refetchPortfolio();
+    } catch (error) {
+      console.error("Error deleting skill:", error);
+    }
+  };
+
+  return (
+    <AdminShell
+      index="03 / Skills"
+      title="Manage Skills"
+      subtitle="Categories, icon names, and Tailwind color classes."
+      action={
+        <button
+          type="button"
+          onClick={() => setShowForm(!showForm)}
+          className="btn-solid inline-flex items-center gap-2 px-4 py-2.5 font-display text-sm font-semibold"
         >
-            <div className="flex items-center justify-between mb-4">
-                <h3 className={`text-xl font-bold ${categoryInfo.color}`}>
-                    {categoryInfo.label}
-                </h3>
-                <span className="text-sm text-gray-400">
-                    {skillsList.length} skills
-                </span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-3 mb-4">
-                {skillsList.map((skill, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-700 p-3 rounded">
-                        <div className="flex items-center space-x-2">
-                            <span className={`${skill.color} text-lg`}>●</span>
-                            <span className="text-white">{skill.name}</span>
-                            <span className="text-xs text-gray-400">({skill.icon})</span>
-                        </div>
-                        <div className="flex space-x-1">
-                            <button
-                                onClick={() => handleEdit(category, skill, index)}
-                                className="p-1 text-blue-400 hover:text-blue-300 transition-colors"
-                            >
-                                <AiOutlineEdit />
-                            </button>
-                            <button
-                                onClick={() => handleDelete(category, index)}
-                                className="p-1 text-red-400 hover:text-red-300 transition-colors"
-                            >
-                                <AiOutlineDelete />
-                            </button>
-                        </div>
-                    </div>
+          <AiOutlinePlusCircle />
+          {showForm ? "Hide form" : "Add skill"}
+        </button>
+      }
+    >
+      {showForm && (
+        <motion.div
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`${adminPanelClass} mb-10 max-w-2xl`}
+        >
+          <h2 className="mb-4 font-display text-xl font-semibold text-white">
+            {editingSkill ? "Edit skill" : "Add skill"}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className={adminLabelClass}>Category</label>
+              <select
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                required
+              >
+                {categories.map((cat) => (
+                  <option key={cat.key} value={cat.key}>
+                    {cat.label}
+                  </option>
                 ))}
+              </select>
             </div>
+            <div>
+              <label className={adminLabelClass}>Skill name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                placeholder="e.g., React, Python, Docker"
+                required
+              />
+            </div>
+            <div>
+              <label className={adminLabelClass}>Icon</label>
+              <input
+                type="text"
+                name="icon"
+                value={formData.icon}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                placeholder="e.g., FaReact, SiLangchain"
+                required
+              />
+              <p className="mt-1 text-xs text-zinc-600">
+                Must exist in Skills.jsx iconMap (fa / si / di / tb / bi).
+              </p>
+              <div className="mt-2 flex flex-wrap gap-1">
+                {iconExamples.map((icon) => (
+                  <button
+                    key={icon}
+                    type="button"
+                    className="accent-chip border border-white/10 px-2 py-1 font-mono text-[10px] text-zinc-400"
+                    onClick={() => setFormData({ ...formData, icon })}
+                  >
+                    {icon}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className={adminLabelClass}>Color</label>
+              <input
+                type="text"
+                name="color"
+                value={formData.color}
+                onChange={handleInputChange}
+                className={adminInputClass}
+                placeholder="e.g., text-blue-500"
+                required
+              />
+              <div className="mt-2 flex flex-wrap gap-1">
+                {colorExamples.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    className="accent-chip border border-white/10 px-2 py-1 font-mono text-[10px] text-zinc-400"
+                    onClick={() => setFormData({ ...formData, color })}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3 pt-2">
+              <button type="submit" className="btn-solid px-5 py-2.5 font-display text-sm font-semibold">
+                {editingSkill ? "Update" : "Add"}
+              </button>
+              <button type="button" onClick={resetForm} className="btn-ghost px-5 py-2.5 font-display text-sm">
+                Cancel
+              </button>
+            </div>
+          </form>
         </motion.div>
-    );
+      )}
 
-    return (
-        <div className="text-white">
-            <h1 className="text-3xl font-bold mb-4 text-purple-600">Manage Skills</h1>
+      <div className="mb-6 flex items-center gap-4">
+        <span className="section-rule" />
+        <h3 className="font-display text-lg font-semibold">
+          Nodes · {String(totalSkills).padStart(2, "0")}
+        </h3>
+      </div>
 
-            <button
-                onClick={() => setShowForm(!showForm)}
-                className="mb-6 px-4 py-2 bg-green-600 text-white rounded flex items-center space-x-2 hover:bg-green-700 transition-colors duration-300"
-            >
-                <AiOutlinePlusCircle />
-                <span>{showForm ? 'Hide Form' : 'Add New Skill'}</span>
-            </button>
-
-            {showForm && (
-                <motion.div
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700"
-                >
-                    <h2 className="text-xl font-bold mb-4 text-purple-400">
-                        {editingSkill ? 'Edit Skill' : 'Add New Skill'}
-                    </h2>
-                    
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Category</label>
-                            <select
-                                name="category"
-                                value={formData.category}
-                                onChange={handleInputChange}
-                                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-                                required
-                            >
-                                {categories.map(cat => (
-                                    <option key={cat.key} value={cat.key}>
-                                        {cat.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Skill Name</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-                                placeholder="e.g., React, Python, Docker"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Icon</label>
-                            <input
-                                type="text"
-                                name="icon"
-                                value={formData.icon}
-                                onChange={handleInputChange}
-                                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-                                placeholder="e.g., FaReact, SiNextdotjs, FaDocker"
-                                required
-                            />
-                            <p className="text-xs text-gray-400 mt-1">
-                                Enter React icon name (from react-icons/fa, si, or di — must be added to Skills.jsx iconMap)
-                            </p>
-                            <div className="mt-2">
-                                <p className="text-xs text-gray-500 mb-1">Common examples:</p>
-                                <div className="flex flex-wrap gap-1">
-                                    {iconExamples.slice(0, 8).map(icon => (
-                                        <span
-                                            key={icon}
-                                            className="text-xs bg-gray-600 px-2 py-1 rounded cursor-pointer hover:bg-gray-500"
-                                            onClick={() => setFormData({...formData, icon})}
-                                        >
-                                            {icon}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium mb-2">Color</label>
-                            <input
-                                type="text"
-                                name="color"
-                                value={formData.color}
-                                onChange={handleInputChange}
-                                className="w-full p-2 bg-gray-700 border border-gray-600 rounded text-white"
-                                placeholder="e.g., text-blue-500, text-red-600, text-green-400"
-                                required
-                            />
-                            <p className="text-xs text-gray-400 mt-1">
-                                Enter Tailwind CSS color class (text-{'{color}'}-{'{shade}'})
-                            </p>
-                            <div className="mt-2">
-                                <p className="text-xs text-gray-500 mb-1">Common examples:</p>
-                                <div className="flex flex-wrap gap-1">
-                                    {colorExamples.slice(0, 8).map(color => (
-                                        <span
-                                            key={color}
-                                            className="text-xs bg-gray-600 px-2 py-1 rounded cursor-pointer hover:bg-gray-500"
-                                            onClick={() => setFormData({...formData, color})}
-                                        >
-                                            {color}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="flex space-x-4">
-                            <button
-                                type="submit"
-                                className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors duration-300"
-                            >
-                                {editingSkill ? 'Update Skill' : 'Add Skill'}
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setShowForm(false);
-                                    setEditingSkill(null);
-                                    setFormData({ category: 'General', name: '', icon: '', color: 'text-blue-500' });
-                                }}
-                                className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors duration-300"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
-                </motion.div>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {categories.map(categoryInfo => 
-                    <div key={categoryInfo.key}>
-                        {renderSkillCard(categoryInfo.key, skills[categoryInfo.key] || [], categoryInfo)}
-                    </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {categories.map((categoryInfo) => {
+          const list = skills[categoryInfo.key] || [];
+          return (
+            <div key={categoryInfo.key} className={adminPanelClass}>
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <h3 className="font-display text-lg font-semibold text-white">
+                  {categoryInfo.label}
+                </h3>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-zinc-600">
+                  {list.length} skills
+                </span>
+              </div>
+              <div className="space-y-2">
+                {list.length === 0 && (
+                  <p className="text-sm text-zinc-600">No skills in this category.</p>
                 )}
+                {list.map((skill, index) => (
+                  <div
+                    key={`${skill.name}-${index}`}
+                    className={`flex items-center justify-between gap-3 ${adminListItemClass} bg-black/30 px-3 py-2.5`}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className={`${skill.color} text-sm`}>●</span>
+                        <span className="truncate text-sm text-white">{skill.name}</span>
+                      </div>
+                      <p className="mt-0.5 font-mono text-[10px] text-zinc-600">{skill.icon}</p>
+                    </div>
+                    <div className="flex shrink-0 gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(categoryInfo.key, skill, index)}
+                        className="p-2 text-zinc-400 transition hover:text-[var(--accent-a)]"
+                        aria-label="Edit"
+                      >
+                        <AiOutlineEdit />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(categoryInfo.key, index)}
+                        className="p-2 text-zinc-400 transition hover:text-[var(--accent-c)]"
+                        aria-label="Delete"
+                      >
+                        <AiOutlineDelete />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-        </div>
-    );
+          );
+        })}
+      </div>
+    </AdminShell>
+  );
 };
 
 export default SkillsManager;

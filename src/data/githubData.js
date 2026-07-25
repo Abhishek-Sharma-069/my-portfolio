@@ -2,7 +2,7 @@ export const githubProfile = {
   username: "Abhishek-Sharma-069",
   profileUrl: "https://github.com/Abhishek-Sharma-069",
   contributionsApi: "https://github-contributions-api.jogruber.de/v4/Abhishek-Sharma-069?y=last",
-  email: "abhello12@gmail.com",
+  email: "abhisheksharma069x@gmail.com",
   handle: "@thelone.boy",
   tagline: "Campus Ambassador @ GeeksforGeeks · CSE · AKTU 2022–2026",
   highlights: [
@@ -86,10 +86,4 @@ export function buildHeatmapWeeks(contributions = []) {
   return weeks;
 }
 
-export const LEVEL_COLORS = [
-  "bg-white/[0.04]",
-  "bg-sky-300/25",
-  "bg-sky-300/45",
-  "bg-violet-300/55",
-  "bg-rose-300/70",
-];
+export const LEVEL_COLORS = ["hm-0", "hm-1", "hm-2", "hm-3", "hm-4"];

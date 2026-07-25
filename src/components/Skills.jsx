@@ -55,11 +55,11 @@ const iconMap = {
 };
 
 const accentMap = {
-  "General": "from-amber-300/40 via-white/10 to-transparent",
-  "Web Development": "from-cyan-300/40 via-white/10 to-transparent",
-  "Mobile Development": "from-sky-300/40 via-white/10 to-transparent",
-  "Databases": "from-emerald-300/40 via-white/10 to-transparent",
-  "DevOps & Tools": "from-violet-300/40 via-white/10 to-transparent",
+  "General": "from-[var(--accent-d)]/45 via-white/10 to-transparent",
+  "Web Development": "from-[var(--accent-a)]/45 via-white/10 to-transparent",
+  "Mobile Development": "from-[var(--accent-b)]/45 via-white/10 to-transparent",
+  "Databases": "from-[var(--accent-c)]/45 via-white/10 to-transparent",
+  "DevOps & Tools": "from-[var(--accent-a)]/30 via-[var(--accent-b)]/25 to-transparent",
 };
 
 const Skills = () => {
@@ -105,12 +105,12 @@ const Skills = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: index * 0.06 }}
-              className="relative overflow-hidden border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm"
+              className="accent-card relative overflow-hidden border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm"
             >
-              <div className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r ${accentMap[category] || "from-white/40 to-transparent"}`} />
+              <div className={`pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r ${accentMap[category] || "from-[var(--accent-a)]/40 to-transparent"}`} />
               <div className="mb-6 flex items-baseline justify-between gap-3">
                 <h3 className="font-display text-lg font-semibold text-white">{category}</h3>
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-zinc-600">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent-a)]/50">
                   {skillsArray.length} nodes
                 </span>
               </div>
@@ -125,7 +125,7 @@ const Skills = () => {
                       whileInView={{ scale: 1, opacity: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.25, delay: skillIndex * 0.03 }}
-                      className="group flex flex-col items-center border border-transparent p-3 transition hover:border-white/10 hover:bg-white/[0.03]"
+                      className="group flex flex-col items-center border border-transparent p-3 transition hover:border-[color-mix(in_srgb,var(--accent-a)_25%,transparent)] hover:bg-white/[0.03]"
                     >
                       {IconComponent ? (
                         <IconComponent className={`${skill.color} text-2xl transition duration-200 group-hover:scale-110`} />

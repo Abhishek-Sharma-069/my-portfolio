@@ -97,7 +97,7 @@ const Contact = () => {
             {domains.map((d) => (
               <div
                 key={d.label}
-                className="border border-white/10 bg-white/[0.02] px-3 py-2"
+                className="accent-chip border border-white/10 bg-white/[0.02] px-3 py-2"
               >
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-300">
                   {d.label}
@@ -118,7 +118,7 @@ const Contact = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.name}
-                  className="text-zinc-500 transition duration-300 hover:scale-110 hover:text-white"
+                  className="text-zinc-500 transition duration-300 hover:scale-110 hover:text-[var(--accent-a)]"
                 >
                   <IconComponent className="text-xl" />
                 </a>
@@ -137,7 +137,7 @@ const Contact = () => {
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               Direct line
             </span>
-            <span className="font-display text-lg font-semibold text-white">
+            <span className="font-display text-lg font-semibold text-chroma">
               {String(contactData.socials.length).padStart(2, "0")}
             </span>
           </div>
@@ -146,7 +146,7 @@ const Contact = () => {
           </p>
           <a
             href={`mailto:${githubProfile.email}`}
-            className="mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-white"
+            className="accent-link mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400"
           >
             {githubProfile.email}
             <FaArrowRight className="text-[10px]" />
@@ -170,9 +170,12 @@ const Contact = () => {
         <form className="flex flex-col gap-5" onSubmit={onSubmit}>
           {submitStatus && (
             <div
-              className={`text-center text-sm ${
-                submitStatus.includes("Thank you") ? "text-emerald-400" : "text-rose-400"
-              }`}
+              className="text-center text-sm"
+              style={{
+                color: submitStatus.includes("Thank you")
+                  ? "var(--accent-a)"
+                  : "var(--accent-c)",
+              }}
             >
               {submitStatus}
             </div>
@@ -186,7 +189,7 @@ const Contact = () => {
               id="name"
               name="name"
               required
-              className="w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none transition focus:border-white/40"
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
               placeholder="Your name"
             />
           </div>
@@ -199,7 +202,7 @@ const Contact = () => {
               id="email"
               name="email"
               required
-              className="w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none transition focus:border-white/40"
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
               placeholder="your.email@example.com"
             />
           </div>
@@ -212,7 +215,7 @@ const Contact = () => {
               name="message"
               required
               rows={5}
-              className="w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none transition focus:border-white/40"
+              className="accent-field w-full border border-white/10 bg-black/40 p-3 text-sm text-white outline-none"
               placeholder="What are you working on?"
             />
           </div>

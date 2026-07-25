@@ -2,6 +2,7 @@ import './App.css';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Navbar, Landing, About, Skills, Projects, Contact, Experience, Resume } from './index.js';
 import Preloader from './components/Preloader.jsx';
+import CustomCursor from './components/CustomCursor.jsx';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchPortfolioData } from './redux/slices/portfolioSlice';
@@ -14,6 +15,7 @@ import ProjectsManager from './admin/ProjectsManager';
 import ExperienceManager from './admin/ExperienceManager';
 import SkillsManager from './admin/SkillsManager';
 import ResumeManager from './admin/ResumeManager';
+import AboutManager from './admin/AboutManager';
 import ProtectedRoute from './admin/ProtectedRoute';
 
 function App() {
@@ -34,10 +36,18 @@ function App() {
 
   const isAdminRoute = location.pathname.startsWith('/admin');
 
-  if (loading && location.pathname === '/') return <Preloader />;
+  if (loading && location.pathname === '/') {
+    return (
+      <>
+        <CustomCursor />
+        <Preloader />
+      </>
+    );
+  }
 
   return (
     <div className={isAdminRoute ? '' : 'min-h-screen bg-[var(--bg)] text-white'}>
+      <CustomCursor />
       {!isAdminRoute && <Navbar />}
       <div className={!isAdminRoute ? 'pt-16' : ''}>
         <Routes>
@@ -59,6 +69,7 @@ function App() {
               <Route path="experience" element={<ExperienceManager />} />
               <Route path="skills" element={<SkillsManager />} />
               <Route path="resume" element={<ResumeManager />} />
+              <Route path="about" element={<AboutManager />} />
             </Route>
           </Route>
         </Routes>

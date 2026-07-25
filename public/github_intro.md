@@ -13,7 +13,7 @@
 
 - 💬 Ask me about: **Full Stack Development, Frontend Development, Backend Development**
 
-- 📫 Reach out to me: **abhello12@gmail.com** (@thelone.boy)
+- 📫 Reach out to me: **abhisheksharma069x@gmail.com** (@thelone.boy)
   
 -----------------------
 ## <img src="https://cdn-icons-png.flaticon.com/512/5969/5969702.png" width="25">  <b>A little bit about myself :)</b>

@@ -53,7 +53,7 @@ const Projects = () => {
             {domains.map((d) => (
               <div
                 key={d.label}
-                className="border border-white/10 bg-white/[0.02] px-3 py-2"
+                className="accent-chip border border-white/10 bg-white/[0.02] px-3 py-2"
               >
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-300">
                   {d.label}
@@ -74,7 +74,7 @@ const Projects = () => {
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               Live catalog
             </span>
-            <span className="font-display text-3xl font-semibold text-white">
+            <span className="font-display text-3xl font-semibold text-chroma">
               {String(projects.length).padStart(2, "0")}
             </span>
           </div>
@@ -85,7 +85,7 @@ const Projects = () => {
             href="https://github.com/Abhishek-Sharma-069?tab=repositories"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-white"
+            className="mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-[var(--accent-a)]"
           >
             Browse repos
             <FaArrowRight className="text-[10px]" />
@@ -108,7 +108,7 @@ const Projects = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: index * 0.05 }}
-            className="group flex flex-col overflow-hidden border border-white/10 bg-white/[0.02]"
+            className="accent-card group flex flex-col overflow-hidden border border-white/10 bg-white/[0.02]"
           >
             <div className="relative overflow-hidden">
               <img
@@ -117,6 +117,10 @@ const Projects = () => {
                 className="h-44 w-full object-cover grayscale transition duration-500 group-hover:grayscale-0 group-hover:scale-105"
               />
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+              <div
+                className="pointer-events-none absolute inset-x-0 top-0 h-px opacity-0 transition duration-500 group-hover:opacity-100"
+                style={{ background: "var(--chroma)", backgroundSize: "200% 100%" }}
+              />
             </div>
             <div className="flex flex-1 flex-col p-5">
               <h3 className="font-display text-lg font-semibold text-white">{project.title}</h3>

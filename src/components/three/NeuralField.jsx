@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -15,23 +15,42 @@ function bindPointer() {
   return () => window.removeEventListener("pointermove", onMove);
 }
 
+function readThemeColors() {
+  const styles = getComputedStyle(document.documentElement);
+  const pick = (name, fallback) => styles.getPropertyValue(name).trim() || fallback;
+  return [
+    pick("--accent-a", "#7dd3fc"),
+    pick("--accent-b", "#c4b5fd"),
+    pick("--accent-c", "#fb7185"),
+    pick("--accent-d", "#fbbf24"),
+  ];
+}
+
+function useThemeChroma() {
+  const [hexes, setHexes] = useState(readThemeColors);
+
+  useEffect(() => {
+    const sync = () => setHexes(readThemeColors());
+    const obs = new MutationObserver(sync);
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+    return () => obs.disconnect();
+  }, []);
+
+  return useMemo(() => hexes.map((h) => new THREE.Color(h)), [hexes]);
+}
+
 function Core() {
   const mesh = useRef();
   const ring = useRef();
-  const chroma = useMemo(
-    () => [
-      new THREE.Color("#7dd3fc"),
-      new THREE.Color("#c4b5fd"),
-      new THREE.Color("#fb7185"),
-      new THREE.Color("#fbbf24"),
-    ],
-    []
-  );
-  const color = useMemo(() => new THREE.Color("#7dd3fc"), []);
+  const chroma = useThemeChroma();
+  const color = useMemo(() => new THREE.Color(chroma[0]), []);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    if (!mesh.current || !ring.current) return;
+    if (!mesh.current || !ring.current || !chroma.length) return;
     mesh.current.rotation.x = t * 0.18;
     mesh.current.rotation.y = t * 0.28;
     ring.current.rotation.z = -t * 0.22;
@@ -50,8 +69,8 @@ function Core() {
       <mesh ref={mesh} scale={1.15}>
         <icosahedronGeometry args={[1.35, 1]} />
         <meshStandardMaterial
-          color="#7dd3fc"
-          emissive="#7dd3fc"
+          color={chroma[0]}
+          emissive={chroma[0]}
           emissiveIntensity={0.55}
           wireframe
           transparent
@@ -60,7 +79,7 @@ function Core() {
       </mesh>
       <mesh ref={ring} scale={2.05}>
         <torusGeometry args={[1.1, 0.008, 16, 120]} />
-        <meshBasicMaterial color="#c4b5fd" transparent opacity={0.55} />
+        <meshBasicMaterial color={chroma[1]} transparent opacity={0.55} />
       </mesh>
       <mesh scale={2.55} rotation={[Math.PI / 2.5, 0.4, 0]}>
         <torusGeometry args={[1.05, 0.004, 12, 100]} />
@@ -73,6 +92,7 @@ function Core() {
 function ParticleField({ intensity = 1 }) {
   const pointsRef = useRef();
   const linesRef = useRef();
+  const chroma = useThemeChroma();
 
   const { phases, linePositions, pointsGeo, linesGeo, base } = useMemo(() => {
     const positions = new Float32Array(PARTICLE_COUNT * 3);
@@ -96,21 +116,12 @@ function ParticleField({ intensity = 1 }) {
   }, []);
 
   const mixColor = useMemo(() => new THREE.Color("#ffffff"), []);
-  const chroma = useMemo(
-    () => [
-      new THREE.Color("#7dd3fc"),
-      new THREE.Color("#c4b5fd"),
-      new THREE.Color("#fb7185"),
-      new THREE.Color("#fbbf24"),
-    ],
-    []
-  );
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const pts = pointsRef.current;
     const lines = linesRef.current;
-    if (!pts || !lines) return;
+    if (!pts || !lines || !chroma.length) return;
 
     const pos = pointsGeo.getAttribute("position").array;
     for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -167,18 +178,23 @@ function ParticleField({ intensity = 1 }) {
 
 function SceneRig({ intensity }) {
   const group = useRef();
+  const chroma = useThemeChroma();
+  const lightA = useRef();
+  const lightB = useRef();
 
   useFrame((state) => {
     if (!group.current) return;
     group.current.rotation.y = pointer.x * 0.35 + state.clock.elapsedTime * 0.05;
     group.current.rotation.x = -pointer.y * 0.2;
+    if (lightA.current && chroma[0]) lightA.current.color.copy(chroma[0]);
+    if (lightB.current && chroma[2]) lightB.current.color.copy(chroma[2]);
   });
 
   return (
     <group ref={group}>
       <ambientLight intensity={0.35} />
-      <pointLight position={[4, 3, 5]} intensity={1.2} color="#7dd3fc" />
-      <pointLight position={[-4, -2, 3]} intensity={0.8} color="#fb7185" />
+      <pointLight ref={lightA} position={[4, 3, 5]} intensity={1.2} color={chroma[0]} />
+      <pointLight ref={lightB} position={[-4, -2, 3]} intensity={0.8} color={chroma[2]} />
       <Core />
       <ParticleField intensity={intensity} />
     </group>

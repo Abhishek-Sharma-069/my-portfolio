@@ -65,7 +65,7 @@ const Experience = () => {
             {domains.map((d) => (
               <div
                 key={d.label}
-                className="border border-white/10 bg-white/[0.02] px-3 py-2"
+                className="accent-chip border border-white/10 bg-white/[0.02] px-3 py-2"
               >
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-300">
                   {d.label}
@@ -86,7 +86,7 @@ const Experience = () => {
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               Total roles
             </span>
-            <span className="font-display text-3xl font-semibold text-white">
+            <span className="font-display text-3xl font-semibold text-chroma">
               {loading ? "—" : String(totalRoles).padStart(2, "0")}
             </span>
           </div>
@@ -95,7 +95,7 @@ const Experience = () => {
           </p>
           <Link
             to="/resume"
-            className="mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-white"
+            className="accent-link mt-1 inline-flex w-fit items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400"
           >
             View resume
             <FaArrowRight className="text-[10px]" />
@@ -129,10 +129,10 @@ const Experience = () => {
           <button
             type="button"
             onClick={() => toggleAccordion(index)}
-            className="flex w-full items-center justify-between border border-white/10 bg-white/[0.02] px-5 py-4 text-left transition hover:border-white/25 hover:bg-white/[0.04]"
+            className="accent-hover-border flex w-full items-center justify-between border border-white/10 bg-white/[0.02] px-5 py-4 text-left"
           >
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[10px] text-zinc-600">
+              <span className="font-mono text-[10px] text-[var(--accent-a)]/65">
                 0{index + 1}
               </span>
               <h3 className="font-display text-lg font-semibold text-white">{section.type}</h3>
@@ -156,18 +156,27 @@ const Experience = () => {
                 transition={{ duration: 0.3 }}
                 className="relative mt-6 ml-2 overflow-hidden pl-6"
               >
-                <div className="absolute left-4 top-0 h-full w-px bg-gradient-to-b from-cyan-300/60 via-violet-300/40 to-transparent" />
+                <div
+                  className="absolute left-4 top-0 h-full w-px"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, color-mix(in srgb, var(--accent-a) 65%, transparent), color-mix(in srgb, var(--accent-b) 40%, transparent), transparent)",
+                  }}
+                />
 
                 <div className="flex flex-col gap-8">
                   {section.items.map((item, idx) => (
                     <div key={idx} className="relative flex gap-6">
-                      <div className="absolute left-[-0.65rem] top-2 h-3 w-3 rounded-full border border-white bg-black" />
-                      <div className="w-full border border-white/10 bg-black/40 p-4">
+                      <div
+                        className="absolute left-[-0.65rem] top-2 h-3 w-3 rounded-full border bg-black"
+                        style={{ borderColor: "var(--accent-a)" }}
+                      />
+                      <div className="accent-hover-border w-full border border-white/10 bg-black/40 p-4">
                         <h4 className="font-display text-base font-semibold text-white">
                           {item.company || item.organization}
                         </h4>
                         <p className="mt-1 text-sm text-zinc-300">{item.role}</p>
-                        <p className="font-mono text-xs italic text-zinc-600">{item.duration}</p>
+                        <p className="font-mono text-xs italic text-[var(--accent-a)]/55">{item.duration}</p>
                         <p className="mt-2 text-sm leading-relaxed text-zinc-500">{item.description}</p>
                       </div>
                     </div>

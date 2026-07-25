@@ -75,7 +75,7 @@ const Resume = () => {
             {domains.map((d) => (
               <div
                 key={d.label}
-                className="border border-white/10 bg-white/[0.02] px-3 py-2"
+                className="accent-chip border border-white/10 bg-white/[0.02] px-3 py-2"
               >
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-zinc-300">
                   {d.label}
@@ -96,7 +96,11 @@ const Resume = () => {
             <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
               Status
             </span>
-            <span className="font-display text-lg font-semibold text-white">
+            <span
+              className={`font-display text-lg font-semibold ${
+                resumeUrl ? "text-chroma" : "text-zinc-500"
+              }`}
+            >
               {loading ? "…" : resumeUrl ? "Ready" : "Missing"}
             </span>
           </div>
@@ -108,14 +112,14 @@ const Resume = () => {
           <div className="mt-1 flex flex-wrap gap-4">
             <Link
               to="/experience"
-              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-white"
+              className="accent-link inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400"
             >
               Experience
               <FaArrowRight className="text-[10px]" />
             </Link>
             <Link
               to="/projects"
-              className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400 transition hover:text-white"
+              className="accent-link inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-zinc-400"
             >
               Projects
               <FaArrowRight className="text-[10px]" />
@@ -178,8 +182,14 @@ const Resume = () => {
             className="flex w-full max-w-xl justify-center"
           >
             <div
-              className="overflow-hidden border border-white/15 bg-white shadow-[0_0_60px_rgba(125,211,252,0.08)]"
-              style={{ aspectRatio: "8.7/11", width: "100%", maxWidth: "540px", minHeight: "60vh" }}
+              className="overflow-hidden border border-white/15 bg-white"
+              style={{
+                aspectRatio: "8.7/11",
+                width: "100%",
+                maxWidth: "540px",
+                minHeight: "60vh",
+                boxShadow: "0 0 60px color-mix(in srgb, var(--accent-a) 10%, transparent)",
+              }}
             >
               <iframe
                 src={`${resumeUrl}#toolbar=0`}
